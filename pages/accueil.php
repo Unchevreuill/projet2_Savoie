@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Exemple de produit
+// Exemple de produits
 $produits = array(
     array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => '../images/chemise.jpg'),
     array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => '../images/robe.jpg'),
@@ -13,6 +13,13 @@ if (!isset($_SESSION['panier'])) {
     $_SESSION['panier'] = array();
 }
 
+// Vérifier si un utilisateur est connecté
+$utilisateur_connecte = false;
+if (isset($_SESSION['utilisateur'])) {
+    $utilisateur_connecte = true;
+    $prenom_utilisateur = $_SESSION['utilisateur']['prenom'];
+}
+
 // Vérifier si un produit a été ajouté au panier
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($_POST['index_produit'])) {
     $index = $_POST['index_produit'];
@@ -20,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     array_push($_SESSION['panier'], $produits[$index]);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -50,7 +58,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
             <li><a href="#">Contact</a></li>
         </ul>
         <div class="login-button">
-            <a href="../pages/login.php">Connexion</a>
+            <?php
+            if ($utilisateur_connecte) {
+                echo '<p>Bonjour, ' . $prenom_utilisateur . '!</p>';
+            } else {
+                echo '<a href="../pages/inscription.php">Nouveau membre? Inscription</a>';
+                echo '<a href="../pages/login.php">Connexion</a>';
+            }
+            ?>
         </div>
     </nav>
     
