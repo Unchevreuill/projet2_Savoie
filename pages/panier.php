@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
             <h1>Panier</h1>
             <div class="cart">
                 <a href="panier.php">
-                    <img id="cart-icon" src="../images/cart.png" alt="Panier">
+                    <img id="cart-icon" src="../images/cart-icon.png" alt="Panier">
                     <span id="cart-count"><?php echo count($_SESSION['panier']); ?></span>
                 </a>
             </div>
@@ -63,6 +63,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
                     echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
                 } else {
                     echo '<p>Prix non disponible</p>';
+                }
+
+                // Vérifier si la clé 'image' existe et si le fichier image existe sur le serveur
+                if (isset($produit['image']) && file_exists('../images/' . $produit['image'])) {
+                    echo '<img src="../images/' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
+                } else {
+                    echo '<p>Image non disponible</p>';
                 }
 
                 // Formulaire pour retirer le produit du panier
