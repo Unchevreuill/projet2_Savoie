@@ -72,6 +72,11 @@ nav a {
     object-fit: cover;
 }
 
+/* Clear the margin for every third product to create a new row */
+.product:nth-child(3n) {
+    margin-right: 0;
+}
+
 footer {
     background-color: #333;
     color: #fff;
