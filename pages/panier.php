@@ -40,27 +40,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
             </div>
         </div>
     </header>
-
-    <!-- Ajout de la navbar de la page d'accueil -->
-    <nav>
-        <ul>
-            <li><a href="accueil.php">Accueil</a></li>
-            <li><a href="#">Femmes</a></li>
-            <li><a href="#">Hommes</a></li>
-            <li><a href="#">Enfants</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-        <div class="login-button">
-            <a href="../pages/login.php">Connexion</a>
-        </div>
-    </nav>
-
+    
     <div class="container">
         <?php
         // Vérifier si le panier est vide
         if (empty($_SESSION['panier'])) {
             echo '<p>Votre panier est vide.</p>';
         } else {
+            $total = 0;
+
             // Afficher les produits du panier
             foreach ($_SESSION['panier'] as $index => $produit) {
                 echo '<div class="product">';
@@ -75,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
                 // Vérifier si la clé 'prix' existe avant de l'utiliser
                 if (isset($produit['prix'])) {
                     echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
+                    $total += $produit['prix'];
                 } else {
                     echo '<p>Prix non disponible</p>';
                 }
@@ -94,6 +83,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
 
                 echo '</div>';
             }
+
+            // Afficher le total, les taxes et le montant final
+            $taxes = $total * 0.15; // Exemple de calcul de taxes (15%)
+            $montantFinal = $total + $taxes;
+
+            echo '<div class="total">';
+            echo '<p>Total avant taxes : $' . number_format($total, 2) . '</p>';
+            echo '<p>Taxes (15%) : $' . number_format($taxes, 2) . '</p>';
+            echo '<p>Montant final : $' . number_format($montantFinal, 2) . '</p>';
+            echo '</div>';
         }
         ?>
     </div>

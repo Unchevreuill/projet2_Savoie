@@ -3,21 +3,14 @@ session_start();
 
 // Exemple de produits
 $produits = array(
-    array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => '../images/chemise.jpg'),
-    array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => '../images/robe.jpg'),
-    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => '../images/jeans.jpg')
+    array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => 'chemise.jpg'),
+    array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => 'robe.jpg'),
+    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => 'jeans.jpg')
 );
 
 // Vérifier si le panier existe dans la session, sinon le créer
 if (!isset($_SESSION['panier'])) {
     $_SESSION['panier'] = array();
-}
-
-// Vérifier si un utilisateur est connecté
-$utilisateur_connecte = false;
-if (isset($_SESSION['utilisateur'])) {
-    $utilisateur_connecte = true;
-    $prenom_utilisateur = $_SESSION['utilisateur']['prenom'];
 }
 
 // Vérifier si un produit a été ajouté au panier
@@ -27,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     array_push($_SESSION['panier'], $produits[$index]);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -41,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
         <div class="header-content">
             <h1>Teccart Wear</h1>
             <div class="cart">
-                <a href="../pages/panier.php">
+                <a href="panier.php">
                     <img id="cart-icon" src="../images/cart-icon.png" alt="Panier">
                     <span id="cart-count"><?php echo count($_SESSION['panier']); ?></span>
                 </a>
@@ -58,14 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
             <li><a href="#">Contact</a></li>
         </ul>
         <div class="login-button">
-            <?php
-            if ($utilisateur_connecte) {
-                echo '<p>Bonjour, ' . $prenom_utilisateur . '!</p>';
-            } else {
-                echo '<a href="../pages/inscription.php">Nouveau membre? Inscription</a>';
-                echo '<a href="../pages/login.php">Connexion</a>';
-            }
-            ?>
+            <a href="login.php">Connexion</a>
         </div>
     </nav>
     
@@ -74,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
         // Afficher les produits
         foreach ($produits as $index => $produit) {
             echo '<div class="product">';
-            echo '<img src="' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
+            echo '<img src="../images/' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
             echo '<h3>' . $produit['nom'] . '</h3>';
             echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
             echo '<form method="post" action="accueil.php">';
@@ -91,3 +76,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     </footer>
 </body>
 </html>
+

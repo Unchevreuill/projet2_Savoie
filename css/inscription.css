@@ -12,9 +12,6 @@ header {
 }
 
 .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -24,7 +21,7 @@ h1 {
 }
 
 .container {
-    max-width: 400px;
+    max-width: 800px;
     margin: 20px auto;
     background-color: #fff;
     padding: 20px;
@@ -32,22 +29,24 @@ h1 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.form-group {
-    margin-bottom: 20px;
+/* Styles pour le formulaire (ajustez selon vos besoins) */
+form {
+    display: flex;
+    flex-direction: column;
 }
 
-label {
-    display: block;
+form label {
     margin-bottom: 8px;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
+form input {
+    padding: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.button {
+form input[type="submit"] {
     background-color: #007BFF;
     color: #fff;
     padding: 10px 20px;
@@ -56,7 +55,23 @@ input {
     cursor: pointer;
 }
 
-.button:hover {
+form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Bouton Accueil */
+.accueil-button {
+    display: block;
+    margin-top: 20px;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.accueil-button:hover {
     background-color: #0056b3;
 }
 

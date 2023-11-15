@@ -12,39 +12,25 @@
             <h1>Teccart Wear</h1>
         </div>
     </header>
-
+    
     <div class="container">
         <h2>Inscription</h2>
-        <form action="inscription_logic.php" method="post">
-            <div class="form-group">
-                <label for="prenom">Prénom :</label>
-                <input type="text" id="prenom" name="prenom" required>
-            </div>
+        <form action="../pages/inscription_logic.php" method="post">
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" required>
 
-            <div class="form-group">
-                <label for="nom">Nom :</label>
-                <input type="text" id="nom" name="nom" required>
-            </div>
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" required>
 
-            <div class="form-group">
-                <label for="email">Email :</label>
-                <input type="email" id="email" name="email" required>
-            </div>
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" required>
 
-            <div class="form-group">
-                <label for="mot_de_passe">Mot de passe :</label>
-                <input type="password" id="mot_de_passe" name="mot_de_passe" required>
-            </div>
+            <label for="mot_de_passe">Mot de passe :</label>
+            <input type="password" id="mot_de_passe" name="mot_de_passe" required>
 
-            <div class="form-group">
-                <label for="confirmer_mot_de_passe">Confirmer le mot de passe :</label>
-                <input type="password" id="confirmer_mot_de_passe" name="confirmer_mot_de_passe" required>
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="button">S'inscrire</button>
-            </div>
+            <input type="submit" value="S'inscrire">
         </form>
+        <a href="../pages/accueil.php" class="accueil-button">Accueil</a>
     </div>
 
     <footer>
