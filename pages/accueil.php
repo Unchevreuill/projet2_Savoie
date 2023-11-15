@@ -1,3 +1,25 @@
+<?php
+session_start();
+
+// Exemple de produit
+$produits = array(
+    array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => '../images/chemise.jpg'),
+    array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => '../images/robe.jpg'),
+    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => '../images/jeans.jpg')
+);
+
+// Vérifier si le panier existe dans la session, sinon le créer
+if (!isset($_SESSION['panier'])) {
+    $_SESSION['panier'] = array();
+}
+
+// Vérifier si un produit a été ajouté au panier
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($_POST['index_produit'])) {
+    $index = $_POST['index_produit'];
+    // Ajouter le produit au panier
+    array_push($_SESSION['panier'], $produits[$index]);
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,11 +33,14 @@
         <div class="header-content">
             <h1>Teccart Wear</h1>
             <div class="cart">
-                <span id="cart-count">0</span>
-                <img src="../images/cart-icon.png" alt="Shopping Cart" id="cart-icon">
+                <a href="../pages/panier.php">
+                    <img id="cart-icon" src="../images/cart-icon.png" alt="Panier">
+                    <span id="cart-count"><?php echo count($_SESSION['panier']); ?></span>
+                </a>
             </div>
         </div>
     </header>
+    
     <nav>
         <ul>
             <li><a href="#">Accueil</a></li>
@@ -28,42 +53,26 @@
             <a href="../pages/login.php">Connexion</a>
         </div>
     </nav>
+    
     <div class="container">
-        <div class="product" onclick="addToCart('Chemise Élégante', 29.99)">
-            <img src="../images/chemise.jpg" alt="Elegant Blue Dress Shirt">
-            <h3>Chemise Élégante</h3>
-            <p>Prix : $29.99</p>
-            <a href="#">Acheter</a>
-        </div>
-        <div class="product" onclick="addToCart('Robe d\'Été', 39.99)">
-            <img src="../images/robe.jpg" alt="Casual Summer Dress">
-            <h3>Robe d'Été</h3>
-            <p>Prix : $39.99</p>
-            <a href="#">Acheter</a>
-        </div>
-        <div class="product" onclick="addToCart('Jeans Classiques', 49.99)">
-            <img src="../images/jeans.jpg" alt="Classic Denim Jeans">
-            <h3>Jeans Classiques</h3>
-            <p>Prix : $49.99</p>
-            <a href="#">Acheter</a>
-        </div>
-        <!-- Add more products here if needed -->
+        <?php
+        // Afficher les produits
+        foreach ($produits as $index => $produit) {
+            echo '<div class="product">';
+            echo '<img src="' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
+            echo '<h3>' . $produit['nom'] . '</h3>';
+            echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
+            echo '<form method="post" action="accueil.php">';
+            echo '<input type="hidden" name="index_produit" value="' . $index . '">';
+            echo '<input type="submit" name="acheter" value="Acheter">';
+            echo '</form>';
+            echo '</div>';
+        }
+        ?>
     </div>
+
     <footer>
         <p>&copy; 2023 Teccart Wear. Tous droits réservés.</p>
     </footer>
-    <script>
-        let cartCount = 0;
-
-        function addToCart(productName, price) {
-            cartCount++;
-            updateCartCount(cartCount);
-            console.log(`Added ${productName} to the cart. Price: $${price}`);
-        }
-
-        function updateCartCount(count) {
-            document.getElementById('cart-count').innerText = count;
-        }
-    </script>
 </body>
 </html>
