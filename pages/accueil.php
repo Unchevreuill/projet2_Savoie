@@ -3,9 +3,10 @@ session_start();
 
 // Exemple de produits
 $produits = array(
-    array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => 'chemise.jpg'),
-    array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => 'robe.jpg'),
-    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => 'jeans.jpg')
+    array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => '../images/chemise.jpg'),
+    array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => '../images/robe.jpg'),
+    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => '../images/jeans.jpg'),
+    // Ajoutez d'autres produits selon le même format
 );
 
 // Vérifier si le panier existe dans la session, sinon le créer
@@ -20,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     array_push($_SESSION['panier'], $produits[$index]);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -50,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
             <li><a href="#">Contact</a></li>
         </ul>
         <div class="login-button">
+            <a href="inscription.php">Inscription</a>
             <a href="login.php">Connexion</a>
         </div>
     </nav>
@@ -59,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
         // Afficher les produits
         foreach ($produits as $index => $produit) {
             echo '<div class="product">';
-            echo '<img src="../images/' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
+            echo '<img src="' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
             echo '<h3>' . $produit['nom'] . '</h3>';
             echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
             echo '<form method="post" action="accueil.php">';
@@ -76,4 +79,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     </footer>
 </body>
 </html>
-

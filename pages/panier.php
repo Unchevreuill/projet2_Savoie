@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
         if (empty($_SESSION['panier'])) {
             echo '<p>Votre panier est vide.</p>';
         } else {
+            // Initialiser le montant total
             $total = 0;
 
             // Afficher les produits du panier
@@ -63,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
                 // Vérifier si la clé 'prix' existe avant de l'utiliser
                 if (isset($produit['prix'])) {
                     echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
+                    // Ajouter le prix au total
                     $total += $produit['prix'];
                 } else {
                     echo '<p>Prix non disponible</p>';
@@ -84,12 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
                 echo '</div>';
             }
 
-            // Afficher le total, les taxes et le montant final
-            $taxes = $total * 0.15; // Exemple de calcul de taxes (15%)
+            // Afficher le montant total, les taxes et le montant final
+            $taxes = $total * 0.15; // Exemple de calcul de taxes à 15%
             $montantFinal = $total + $taxes;
 
             echo '<div class="total">';
-            echo '<p>Total avant taxes : $' . number_format($total, 2) . '</p>';
+            echo '<p>Montant avant taxes : $' . number_format($total, 2) . '</p>';
             echo '<p>Taxes (15%) : $' . number_format($taxes, 2) . '</p>';
             echo '<p>Montant final : $' . number_format($montantFinal, 2) . '</p>';
             echo '</div>';

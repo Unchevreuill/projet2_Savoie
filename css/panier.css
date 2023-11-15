@@ -2,7 +2,6 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f2f2f2;
     margin: 0;
-    padding: 0;
 }
 
 header {
@@ -16,29 +15,45 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.cart {
-    margin-left: auto;
+h1 {
+    margin: 0;
 }
 
-#cart-icon {
-    width: 40px; /* Ajustez la taille du logo du panier */
-}
-
-#cart-count {
-    background-color: #ff0000; /* Couleur de fond pour le compteur de produits dans le panier */
+nav {
+    background-color: #333;
     color: #fff;
-    border-radius: 50%;
-    padding: 5px 8px;
-    font-size: 14px;
-    position: relative;
-    top: -15px;
-    left: -10px;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 15px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #555;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 20px auto;
     background-color: #fff;
     padding: 20px;
@@ -54,12 +69,15 @@ header {
     text-align: center;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: calc(33.33% - 20px);
+    box-sizing: border-box;
     display: inline-block;
-    width: 30%;
 }
 
 .product img {
     max-width: 100%;
+    height: 200px;
+    object-fit: cover;
 }
 
 .container form {
@@ -89,7 +107,7 @@ header {
     margin-left: 10px;
 }
 
-footer {
+.footer {
     text-align: center;
     padding: 20px 0;
     background-color: #333;
