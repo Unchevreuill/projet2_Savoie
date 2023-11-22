@@ -1,57 +1,46 @@
+<?php
+session_start();
+
+
+include_once('../projet2_Savoie/db_connect.php');
+include_once('./login_logic.php');
+?>
+
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Page de Connexion</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        h2 {
-            text-align: center;
-        }
-        label, input {
-            display: block;
-            margin-bottom: 10px;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        input[type="submit"] {
-            background-color: #007BFF;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teccart Wear - Connexion</title>
+    <link rel="stylesheet" href="login.css">
 </head>
 <body>
+    <header>
+        <div class="header-content">
+            <h1>Teccart Wear</h1>
+        </div>
+    </header>
+
     <div class="container">
         <h2>Connexion</h2>
-        <form action="process_login.php" method="post">
-            <label for="username">Nom d'utilisateur:</label>
-            <input type="text" id="username" name="username" required>
+        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+            <div class="form-group">
+                <label for="email">Adresse E-mail:</label>
+                <input type="email" id="email" name="email" class="input-field" value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>">
+                <span class="error"><?php echo $emailError; ?></span>
+            </div>
 
-            <label for="password">Mot de passe:</label>
-            <input type="password" id="password" name="password" required>
+            <div class="form-group">
+                <label for="password">Mot de passe:</label>
+                <input type="password" id="password" name="password" class="input-field">
+                <span class="error"><?php echo $passwordError; ?></span>
+            </div>
 
-            <input type="submit" value="Se connecter">
+            <div class="form-group">
+                <input type="submit" name="submit" value="Se connecter" class="login-button">
+            </div>
+
+            <span class="error"><?php echo $loginError; ?></span>
         </form>
     </div>
 </body>

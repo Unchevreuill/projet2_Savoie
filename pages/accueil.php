@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     array_push($_SESSION['panier'], $produits[$index]);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -27,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Accueil</title>
     <link rel="stylesheet" href="../css/accueil.css">
+   
 </head>
 <body>
     <header>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once('../db_connect.php'); 
 
 // Vérifier si le panier existe dans la session, sinon le créer
 if (!isset($_SESSION['panier'])) {
@@ -7,28 +8,27 @@ if (!isset($_SESSION['panier'])) {
 }
 
 // Vérifier si un produit a été sélectionné
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($_POST['index_produit'])) {
-    // Récupérer l'index du produit depuis le formulaire
-    $index = $_POST['index_produit'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($_POST['product_id'])) {
+    // Récupérer l'ID du produit depuis le formulaire
+    $product_id = $_POST['product_id'];
 
-    // Exemple de produits (à remplacer par votre logique d'ajout de produits)
-    $produits = array(
-        array('nom' => 'Chemise Élégante', 'prix' => 29.99),
-        array('nom' => 'Robe d\'Été', 'prix' => 39.99),
-        array('nom' => 'Jeans Classiques', 'prix' => 49.99)
-    );
+    // Récupérer les informations du produit depuis la base de données
+    $query = "SELECT * FROM product WHERE id = :product_id";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Vérifier si l'index est valide
-    if ($index >= 0 && $index < count($produits)) {
+    // Vérifier si le produit existe
+    if ($product) {
         // Ajouter le produit au panier
-        $produit = $produits[$index];
-        array_push($_SESSION['panier'], $produit);
+        array_push($_SESSION['panier'], $product);
 
         // Rediriger vers la page d'accueil après l'ajout au panier
         header('Location: ../pages/accueil.php');
         exit();
     } else {
-        // Rediriger vers la page d'accueil si l'index n'est pas valide
+        // Rediriger vers la page d'accueil si le produit n'est pas trouvé
         header('Location: ../pages/accueil.php');
         exit();
     }
