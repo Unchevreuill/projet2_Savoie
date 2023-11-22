@@ -1,6 +1,24 @@
 <?php
-// Vous pouvez inclure ici des fichiers communs ou des configurations nécessaires pour votre projet
-session_start(); // Démarrez la session si elle n'a pas encore été démarrée
+session_start();
+
+// Exemple de produit
+$produits = array(
+    array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => './images/chemise.jpg'),
+    array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => './images/robe.jpg'),
+    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => './images/jeans.jpg')
+);
+
+// Vérifier si le panier existe dans la session, sinon le créer
+if (!isset($_SESSION['panier'])) {
+    $_SESSION['panier'] = array();
+}
+
+// Vérifier si un produit a été ajouté au panier
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($_POST['index_produit'])) {
+    $index = $_POST['index_produit'];
+    // Ajouter le produit au panier
+    array_push($_SESSION['panier'], $produits[$index]);
+}
 ?>
 
 <!DOCTYPE html>
@@ -9,38 +27,54 @@ session_start(); // Démarrez la session si elle n'a pas encore été démarrée
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Accueil</title>
-    <!-- Vous pouvez inclure ici des liens vers des fichiers CSS ou d'autres ressources -->
-    <link rel="stylesheet" href="css/style.css"> <!-- Ajoutez vos propres fichiers CSS -->
+    <link rel="stylesheet" href="./css/index.css">
+   
 </head>
 <body>
     <header>
         <div class="header-content">
             <h1>Teccart Wear</h1>
             <div class="cart">
-                <a href="pages/panier.php">
-                    <img id="cart-icon" src="images/cart-icon.png" alt="Panier">
-                    <span id="cart-count"><?php echo isset($_SESSION['panier']) ? count($_SESSION['panier']) : 0; ?></span>
+                <a href="./pages/panier.php">
+                    <img id="cart-icon" src="./images/cart-icon.png" alt="Panier">
+                    <span id="cart-count"><?php echo count($_SESSION['panier']); ?></span>
                 </a>
             </div>
         </div>
     </header>
-
+    
     <nav>
         <ul>
-            <li><a href="pages/accueil.php">Accueil</a></li>
-            <li><a href="pages/inscription.php">Inscription</a></li>
-            <li><a href="pages/login.php">Connexion</a></li>
-            <li><a href="pages/panier.php">Panier</a></li>
-        
+            <li><a href="#">Accueil</a></li>
+            <li><a href="#">Femmes</a></li>
+            <li><a href="#">Hommes</a></li>
+            <li><a href="#">Enfants</a></li>
+            <li><a href="#">Contact</a></li>
         </ul>
+        <div class="login-button">
+            <a href="./pages/login.php">Connexion</a>
+        </div>
     </nav>
-
-    <main>
-        <p>Bienvenue sur la page d'accueil de Teccart Wear.</p>
-    </main>
+    
+    <div class="container">
+        <?php
+        // Afficher les produits
+        foreach ($produits as $index => $produit) {
+            echo '<div class="product">';
+            echo '<img src="' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
+            echo '<h3>' . $produit['nom'] . '</h3>';
+            echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
+            echo '<form method="post" action="index.php">';
+            echo '<input type="hidden" name="index_produit" value="' . $index . '">';
+            echo '<input type="submit" name="acheter" value="Acheter">';
+            echo '</form>';
+            echo '</div>';
+        }
+        ?>
+    </div>
 
     <footer>
-        <p>&copy; <?php echo date("Y"); ?> Teccart Wear. Tous droits réservés.</p>
+        <p>&copy; 2023 Teccart Wear. Tous droits réservés.</p>
     </footer>
 </body>
 </html>

@@ -28,7 +28,7 @@
         }
         ?>
 
-        <form method="post" action="./inscription_logic.php">
+        <form method="post" action="inscription_logic.php">
             <label for="email">Email :</label>
             <input type="email" name="email" required>
 

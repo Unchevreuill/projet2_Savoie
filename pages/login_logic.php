@@ -3,7 +3,7 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['connexion'])) {
     // Inclure le fichier de connexion à la base de données
-    require_once './projet2_Savoie/db_connect.php';
+    require_once '../db_connect.php';
 
     // Récupérer les données du formulaire
     $email = $_POST['email'];
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['connexion'])) {
         $_SESSION['user_role'] = $user['role_id'];
 
         // Rediriger vers la page d'accueil
-        header('Location: ../pages/accueil.php');
+        header('Location: ../index.php');
         exit();
     } else {
         // Utilisateur non trouvé ou mot de passe incorrect

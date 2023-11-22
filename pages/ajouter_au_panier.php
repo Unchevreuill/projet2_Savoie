@@ -25,16 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
         array_push($_SESSION['panier'], $product);
 
         // Rediriger vers la page d'accueil après l'ajout au panier
-        header('Location: ../pages/accueil.php');
+        header('Location: ../index.php');
         exit();
     } else {
         // Rediriger vers la page d'accueil si le produit n'est pas trouvé
-        header('Location: ../pages/accueil.php');
+        header('Location: ../index.php');
         exit();
     }
 } else {
     // Rediriger vers la page d'accueil si aucune donnée de formulaire n'a été reçue
-    header('Location: ../pages/accueil.php');
+    header('Location: ../index.php');
     exit();
 }
 ?>

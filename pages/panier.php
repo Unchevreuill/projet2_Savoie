@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
         // Supprimer le produit du panier
         array_splice($_SESSION['panier'], $index, 1);
         // Rafraîchir la page pour refléter les changements
-        header('Location: panier.php');
+        header('Location: ../pages/panier.php');
         exit();
     }
 }
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
 <body>
     <header>
     <div class="login-button">
-            <a href="accueil.php">Accueil</a>
+            <a href="../index.php">Accueil</a>
         </div>
         <div class="header-content">
             <h1>Panier</h1>
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
                 }
 
                 // Formulaire pour retirer le produit du panier
-                echo '<form method="post" action="panier.php">';
+                echo '<form method="post" action="../pages/panier.php">';
                 echo '<input type="hidden" name="index_produit" value="' . $index . '">';
                 echo '<input type="submit" name="retirer_produit" value="Retirer du panier">';
                 echo '</form>';

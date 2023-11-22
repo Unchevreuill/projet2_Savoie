@@ -2,8 +2,8 @@
 session_start();
 
 
-include_once('../projet2_Savoie/db_connect.php');
-include_once('./login_logic.php');
+include_once('../db_connect.php');
+include_once('../pages/login_logic.php');
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +12,7 @@ include_once('./login_logic.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Connexion</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
     <header>

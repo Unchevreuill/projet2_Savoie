@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inscription'])) {
     // Vérifier si les mots de passe correspondent
     if ($password !== $confirmPassword) {
         $_SESSION['inscription_error'] = "Les mots de passe ne correspondent pas.";
-        header('Location: inscription.php');
+        header('Location: ../pages/inscription.php');
         exit();
     }
 
@@ -33,17 +33,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inscription'])) {
         
         // Rediriger vers la page d'accueil après l'inscription réussie
         $_SESSION['inscription_success'] = "Inscription réussie. Connectez-vous maintenant.";
-        header('Location: accueil.php');
+        header('Location: ../index.php');
         exit();
     } catch (PDOException $e) {
         // En cas d'erreur lors de l'insertion, afficher l'erreur
         $_SESSION['inscription_error'] = "Erreur d'inscription : " . $e->getMessage();
-        header('Location: inscription.php');
+        header('Location: ../pages/inscription.php');
         exit();
     }
 } else {
     // Rediriger vers la page d'accueil si aucune donnée de formulaire n'a été reçue
-    header('Location: accueil.php');
+    header('Location: ../index.php');
     exit();
 }
 ?>
