@@ -1,10 +1,7 @@
 <?php
 session_start();
-<<<<<<< HEAD
 include_once('../db_connect.php'); 
-=======
-include_once('./projet2_Savoie/db_connect.php'); 
->>>>>>> a3448273eb94aff6d3b03413b1a0acff662e0f7f
+
 
 // Vérifier si le panier existe dans la session, sinon le créer
 if (!isset($_SESSION['panier'])) {
@@ -33,11 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
         exit();
     } else {
         // Rediriger vers la page d'accueil si le produit n'est pas trouvé
-<<<<<<< HEAD
         header('Location: ../index.php');
-=======
-        header('Location: ../pages/accueil.php');
->>>>>>> a3448273eb94aff6d3b03413b1a0acff662e0f7f
         exit();
     }
 } else {
