@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once('../db_connect.php'); // Assurez-vous d'avoir un fichier de connexion à la base de données approprié
+include_once('./projet2_Savoie/db_connect.php'); 
 
 // Vérifier si le panier existe dans la session, sinon le créer
 if (!isset($_SESSION['panier'])) {

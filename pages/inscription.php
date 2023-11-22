@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - Teccart Wear</title>
-    <link rel="stylesheet" href="chemin/vers/inscription.css">
+    <link rel="stylesheet" href="../css/inscription.css">
 </head>
 <body>
     <header>
@@ -28,7 +28,7 @@
         }
         ?>
 
-        <form method="post" action="chemin/vers/inscription_logic.php">
+        <form method="post" action="./inscription_logic.php">
             <label for="email">Email :</label>
             <input type="email" name="email" required>
 
@@ -50,7 +50,7 @@
             <input type="submit" name="inscription" value="S'inscrire">
         </form>
 
-        <p>Déjà inscrit ? <a href="chemin/vers/login.php">Connectez-vous ici</a>.</p>
+        <p>Déjà inscrit ? <a href="login.php">Connectez-vous ici</a>.</p>
     </div>
 
     <footer>
