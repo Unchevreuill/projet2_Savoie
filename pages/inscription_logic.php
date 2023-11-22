@@ -1,29 +1,49 @@
 <?php
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Inclure le fichier de connexion à la base de données
+include_once('./projet2_Savoie/db_connect.php');
+
+// Vérifier si le formulaire d'inscription a été soumis
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inscription'])) {
     // Récupérer les données du formulaire
-    $prenom = isset($_POST['prenom']) ? htmlspecialchars($_POST['prenom']) : '';
-    $nom = isset($_POST['nom']) ? htmlspecialchars($_POST['nom']) : '';
-    $email = isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '';
-    $mot_de_passe = isset($_POST['mot_de_passe']) ? password_hash($_POST['mot_de_passe'], PASSWORD_DEFAULT) : '';
-    $confirmer_mot_de_passe = isset($_POST['confirmer_mot_de_passe']) ? password_hash($_POST['confirmer_mot_de_passe'], PASSWORD_DEFAULT) : '';
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirmPassword'];
+    $username = $_POST['username'];
+    $fname = $_POST['fname'];
+    $lname = $_POST['lname'];
 
-    // Valider les données (ajoutez vos propres règles de validation)
+    // Ajouter des vérifications supplémentaires si nécessaire
 
-    if ($mot_de_passe !== $confirmer_mot_de_passe) {
-        // Rediriger avec un message d'erreur
-        $_SESSION['erreur_inscription'] = "Les mots de passe ne correspondent pas.";
+    // Vérifier si les mots de passe correspondent
+    if ($password !== $confirmPassword) {
+        $_SESSION['inscription_error'] = "Les mots de passe ne correspondent pas.";
         header('Location: inscription.php');
         exit();
     }
-    // Exemple de redirection vers la page d'accueil après une inscription réussie
-    $_SESSION['prenom_utilisateur'] = $prenom;
-    header('Location: accueil.php');
-    exit();
+
+    // Hasher le mot de passe
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Insérer l'utilisateur dans la base de données
+    try {
+        $stmt = $pdo->prepare("INSERT INTO user (email, pwd, username, fname, lname, role_id) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$email, $hashedPassword, $username, $fname, $lname, 3]); // 3 est l'ID du rôle "client"
+        
+        // Rediriger vers la page d'accueil après l'inscription réussie
+        $_SESSION['inscription_success'] = "Inscription réussie. Connectez-vous maintenant.";
+        header('Location: accueil.php');
+        exit();
+    } catch (PDOException $e) {
+        // En cas d'erreur lors de l'insertion, afficher l'erreur
+        $_SESSION['inscription_error'] = "Erreur d'inscription : " . $e->getMessage();
+        header('Location: inscription.php');
+        exit();
+    }
 } else {
-    // Rediriger si la page est accédée directement sans POST
-    header('Location: inscription.php');
+    // Rediriger vers la page d'accueil si aucune donnée de formulaire n'a été reçue
+    header('Location: accueil.php');
     exit();
 }
 ?>

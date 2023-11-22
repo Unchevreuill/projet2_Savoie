@@ -1,58 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Page de Connexion</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        h2 {
-            text-align: center;
-        }
-        label, input {
-            display: block;
-            margin-bottom: 10px;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        input[type="submit"] {
-            background-color: #007BFF;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Teccart Wear</title>
+    <link rel="stylesheet" href="chemin/vers/login.css">
 </head>
 <body>
+    <header>
+        <div class="header-content">
+            <h1>Teccart Wear</h1>
+        </div>
+    </header>
+
     <div class="container">
         <h2>Connexion</h2>
-        <form action="process_login.php" method="post">
-            <label for="username">Nom d'utilisateur:</label>
-            <input type="text" id="username" name="username" required>
+        <?php
+        // Afficher les messages d'erreur ou de succès
+        session_start();
+        if (isset($_SESSION['login_error'])) {
+            echo '<p class="error-message">' . $_SESSION['login_error'] . '</p>';
+            unset($_SESSION['login_error']);
+        }
+        ?>
 
-            <label for="password">Mot de passe:</label>
-            <input type="password" id="password" name="password" required>
+        <form method="post" action="chemin/vers/login_logic.php">
+            <label for="email">Email :</label>
+            <input type="email" name="email" required>
 
-            <input type="submit" value="Se connecter">
+            <label for="password">Mot de passe :</label>
+            <input type="password" name="password" required>
+
+            <input type="submit" name="connexion" value="Se connecter">
         </form>
+
+        <p>Pas encore inscrit ? <a href="chemin/vers/inscription.php">Inscrivez-vous ici</a>.</p>
     </div>
+
+    <footer>
+        <p>&copy; 2023 Teccart Wear. Tous droits réservés.</p>
+    </footer>
 </body>
 </html>

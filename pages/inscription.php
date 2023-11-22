@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - Teccart Wear</title>
-    <link rel="stylesheet" href="../css/inscription.css">
+    <link rel="stylesheet" href="chemin/vers/inscription.css">
 </head>
 <body>
     <header>
@@ -12,25 +12,45 @@
             <h1>Teccart Wear</h1>
         </div>
     </header>
-    
+
     <div class="container">
         <h2>Inscription</h2>
-        <form action="../pages/inscription_logic.php" method="post">
-            <label for="prenom">Prénom :</label>
-            <input type="text" id="prenom" name="prenom" required>
+        <?php
+        // Afficher les messages d'erreur ou de succès
+        session_start();
+        if (isset($_SESSION['inscription_error'])) {
+            echo '<p class="error-message">' . $_SESSION['inscription_error'] . '</p>';
+            unset($_SESSION['inscription_error']);
+        }
+        if (isset($_SESSION['inscription_success'])) {
+            echo '<p class="success-message">' . $_SESSION['inscription_success'] . '</p>';
+            unset($_SESSION['inscription_success']);
+        }
+        ?>
 
-            <label for="nom">Nom :</label>
-            <input type="text" id="nom" name="nom" required>
-
+        <form method="post" action="chemin/vers/inscription_logic.php">
             <label for="email">Email :</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" name="email" required>
 
-            <label for="mot_de_passe">Mot de passe :</label>
-            <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+            <label for="password">Mot de passe :</label>
+            <input type="password" name="password" required>
 
-            <input type="submit" value="S'inscrire">
+            <label for="confirmPassword">Confirmer le mot de passe :</label>
+            <input type="password" name="confirmPassword" required>
+
+            <label for="username">Nom d'utilisateur :</label>
+            <input type="text" name="username" required>
+
+            <label for="fname">Prénom :</label>
+            <input type="text" name="fname" required>
+
+            <label for="lname">Nom :</label>
+            <input type="text" name="lname" required>
+
+            <input type="submit" name="inscription" value="S'inscrire">
         </form>
-        <a href="../pages/accueil.php" class="accueil-button">Accueil</a>
+
+        <p>Déjà inscrit ? <a href="chemin/vers/login.php">Connectez-vous ici</a>.</p>
     </div>
 
     <footer>
