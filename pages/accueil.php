@@ -1,12 +1,11 @@
 <?php
 session_start();
 
-// Exemple de produits
+// Exemple de produit
 $produits = array(
     array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => '../images/chemise.jpg'),
     array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => '../images/robe.jpg'),
-    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => '../images/jeans.jpg'),
-    // Ajoutez d'autres produits selon le même format
+    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => '../images/jeans.jpg')
 );
 
 // Vérifier si le panier existe dans la session, sinon le créer
@@ -29,13 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Accueil</title>
     <link rel="stylesheet" href="../css/accueil.css">
+    <!-- Ajoutez d'autres balises meta, liens vers des fichiers CSS ou JavaScript ici si nécessaire -->
 </head>
 <body>
     <header>
         <div class="header-content">
             <h1>Teccart Wear</h1>
             <div class="cart">
-                <a href="panier.php">
+                <a href="../pages/panier.php">
                     <img id="cart-icon" src="../images/cart-icon.png" alt="Panier">
                     <span id="cart-count"><?php echo count($_SESSION['panier']); ?></span>
                 </a>
@@ -52,8 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
             <li><a href="#">Contact</a></li>
         </ul>
         <div class="login-button">
-            <a href="inscription.php">Inscription</a>
-            <a href="login.php">Connexion</a>
+            <a href="../pages/login.php">Connexion</a>
         </div>
     </nav>
     
