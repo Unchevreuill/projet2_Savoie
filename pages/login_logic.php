@@ -3,7 +3,11 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['connexion'])) {
     // Inclure le fichier de connexion à la base de données
+<<<<<<< HEAD
     require_once '../db_connect.php';
+=======
+    require_once './projet2_Savoie/db_connect.php';
+>>>>>>> a3448273eb94aff6d3b03413b1a0acff662e0f7f
 
     // Récupérer les données du formulaire
     $email = $_POST['email'];
@@ -24,17 +28,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['connexion'])) {
         $_SESSION['user_role'] = $user['role_id'];
 
         // Rediriger vers la page d'accueil
+<<<<<<< HEAD
         header('Location: ../index.php');
+=======
+        header('Location: chemin/vers/accueil.php');
+>>>>>>> a3448273eb94aff6d3b03413b1a0acff662e0f7f
         exit();
     } else {
         // Utilisateur non trouvé ou mot de passe incorrect
         $_SESSION['login_error'] = 'Email ou mot de passe incorrect.';
+<<<<<<< HEAD
         header('Location: ../pages/login.php');
+=======
+        header('Location: chemin/vers/login.php');
+>>>>>>> a3448273eb94aff6d3b03413b1a0acff662e0f7f
         exit();
     }
 } else {
     // Rediriger vers la page de connexion si aucune donnée de formulaire n'a été reçue
+<<<<<<< HEAD
     header('Location: ../pages/login.php');
+=======
+    header('Location: chemin/vers/login.php');
+>>>>>>> a3448273eb94aff6d3b03413b1a0acff662e0f7f
     exit();
 }
 ?>

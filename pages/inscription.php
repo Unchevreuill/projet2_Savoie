@@ -28,7 +28,11 @@
         }
         ?>
 
+<<<<<<< HEAD
         <form method="post" action="inscription_logic.php">
+=======
+        <form method="post" action="./inscription_logic.php">
+>>>>>>> a3448273eb94aff6d3b03413b1a0acff662e0f7f
             <label for="email">Email :</label>
             <input type="email" name="email" required>
 

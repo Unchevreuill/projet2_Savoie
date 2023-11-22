@@ -31,7 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
 <body>
     <header>
     <div class="login-button">
+<<<<<<< HEAD
             <a href="../index.php">Accueil</a>
+=======
+            <a href="accueil.php">Accueil</a>
+>>>>>>> a3448273eb94aff6d3b03413b1a0acff662e0f7f
         </div>
         <div class="header-content">
             <h1>Panier</h1>
