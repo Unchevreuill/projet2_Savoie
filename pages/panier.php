@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -30,9 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
 </head>
 <body>
     <header>
-    <div class="login-button">
+        <div class="login-button">
             <a href="../index.php">Accueil</a>
-
         </div>
         <div class="header-content">
             <h1>Panier</h1>

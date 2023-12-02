@@ -4,7 +4,6 @@ session_start();
 // Inclure le fichier de connexion à la base de données
 include_once('../db_connect.php');
 
-
 // Vérifier si le formulaire d'inscription a été soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inscription'])) {
     // Récupérer les données du formulaire
@@ -41,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['inscription'])) {
         // En cas d'erreur lors de l'insertion, afficher l'erreur
         $_SESSION['inscription_error'] = "Erreur d'inscription : " . $e->getMessage();
         header('Location: ../pages/inscription.php');
-
         exit();
     }
 } else {

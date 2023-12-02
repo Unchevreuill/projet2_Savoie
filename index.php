@@ -1,12 +1,13 @@
 <?php
 session_start();
 
-// Exemple de produit
-$produits = array(
-    array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => './images/chemise.jpg'),
-    array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => './images/robe.jpg'),
-    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => './images/jeans.jpg')
-);
+// Inclure le fichier de connexion à la base de données
+include_once('./db_connect.php');
+
+// Récupérer les produits depuis la base de données
+$query = "SELECT * FROM product";
+$stmt = $pdo->query($query);
+$produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Vérifier si le panier existe dans la session, sinon le créer
 if (!isset($_SESSION['panier'])) {
@@ -28,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Accueil</title>
     <link rel="stylesheet" href="./css/index.css">
-   
 </head>
 <body>
     <header>
@@ -52,9 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
             <li><a href="#">Contact</a></li>
         </ul>
         <div class="login-button">
-    <a href="../pages/login.php">Connexion</a>
-</div>
-
+            <a href="../pages/login.php">Connexion</a>
+        </div>
     </nav>
     
     <div class="container">
@@ -62,9 +61,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
         // Afficher les produits
         foreach ($produits as $index => $produit) {
             echo '<div class="product">';
-            echo '<img src="' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
-            echo '<h3>' . $produit['nom'] . '</h3>';
-            echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
+            // Vérifier si la clé 'url_img' existe avant de l'utiliser
+            if (isset($produit['url_img'])) {
+                echo '<img src="../projet2_Savoie/images/' . $produit['url_img'] . '" alt="' . $produit['name'] . '">';
+
+
+
+            } else {
+                echo '<p>Image non disponible</p>';
+            }
+            echo '<h3>' . $produit['name'] . '</h3>';
+            echo '<p>Prix : $' . number_format($produit['price'], 2) . '</p>';
             echo '<form method="post" action="index.php">';
             echo '<input type="hidden" name="index_produit" value="' . $index . '">';
             echo '<input type="submit" name="acheter" value="Acheter">';

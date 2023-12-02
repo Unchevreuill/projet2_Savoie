@@ -1,7 +1,6 @@
 <?php
 session_start();
-include_once('../db_connect.php'); 
-
+include_once('../db_connect.php');
 
 // Vérifier si le panier existe dans la session, sinon le créer
 if (!isset($_SESSION['panier'])) {
@@ -17,21 +16,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
     $query = "SELECT * FROM product WHERE id = :product_id";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    try {
+        $stmt->execute();
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Vérifier si le produit existe
-    if ($product) {
-        // Ajouter le produit au panier
-        array_push($_SESSION['panier'], $product);
+        // Vérifier si le produit existe
+        if ($product) {
+            // Ajouter le produit au panier
+            $_SESSION['panier'][] = array(
+                'id' => $product['id'],
+                'name' => $product['name'],
+                'price' => $product['price'],
+                'image' => $product['url_img']
+            );
 
-        // Rediriger vers la page d'accueil après l'ajout au panier
-        header('Location: ../index.php');
-        exit();
-    } else {
-        // Rediriger vers la page d'accueil si le produit n'est pas trouvé
-        header('Location: ../index.php');
-        exit();
+            // Rediriger vers la page d'accueil après l'ajout au panier
+            header('Location: ../index.php');
+            exit();
+        } else {
+            // Rediriger vers la page d'accueil si le produit n'est pas trouvé
+            header('Location: ../index.php');
+            exit();
+        }
+    } catch (PDOException $e) {
+        // En cas d'erreur lors de l'exécution de la requête
+        echo "Erreur : " . $e->getMessage();
     }
 } else {
     // Rediriger vers la page d'accueil si aucune donnée de formulaire n'a été reçue

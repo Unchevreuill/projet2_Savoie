@@ -15,6 +15,7 @@
 
     <div class="container">
         <h2>Inscription</h2>
+        
         <?php
         // Afficher les messages d'erreur ou de succès
         session_start();
@@ -27,8 +28,8 @@
             unset($_SESSION['inscription_success']);
         }
         ?>
-        <form method="post" action="inscription_logic.php">
 
+        <form method="post" action="inscription_logic.php">
             <label for="email">Email :</label>
             <input type="email" name="email" required>
 
