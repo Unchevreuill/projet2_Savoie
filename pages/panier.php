@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
             }
 
             // Afficher le montant total, les taxes et le montant final
-            $taxes = $total * 0.15; // Exemple de calcul de taxes à 15%
+            $taxes = $total * 0.15;
             $montantFinal = $total + $taxes;
 
             echo '<div class="total">';

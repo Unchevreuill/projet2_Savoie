@@ -45,7 +45,8 @@ include_once('../pages/login_logic.php');
 
         </form>
 
-        <p>Pas encore inscrit ? <a href="chemin/vers/inscription.php">Inscrivez-vous ici</a>.</p>
+        <p>Pas encore inscrit ? <a href="../pages/inscription.php">Inscrivez-vous ici</a>.</p>
+
     </div>
 
     <footer>
