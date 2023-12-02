@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
             <li><a href="#">Contact</a></li>
         </ul>
         <div class="login-button">
-            <a href="../pages/login.php">Connexion</a>
+            <a href="./pages/login.php">Connexion</a>
         </div>
     </nav>
     
