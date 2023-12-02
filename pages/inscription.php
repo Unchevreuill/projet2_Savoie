@@ -9,49 +9,37 @@
 <body>
     <header>
         <div class="header-content">
-            <h1>Teccart Wear</h1>
+            <h1>Inscription</h1>
         </div>
     </header>
-
+    
     <div class="container">
-        <h2>Inscription</h2>
-        
-        <?php
-        // Afficher les messages d'erreur ou de succès
-        session_start();
-        if (isset($_SESSION['inscription_error'])) {
-            echo '<p class="error-message">' . $_SESSION['inscription_error'] . '</p>';
-            unset($_SESSION['inscription_error']);
-        }
-        if (isset($_SESSION['inscription_success'])) {
-            echo '<p class="success-message">' . $_SESSION['inscription_success'] . '</p>';
-            unset($_SESSION['inscription_success']);
-        }
-        ?>
+        <!-- Assurez-vous que le chemin vers votre fichier inscription_logic.php est correct -->
+        <?php include_once '../pages/inscription_logic.php'; ?>
 
-        <form method="post" action="inscription_logic.php">
-            <label for="email">Email :</label>
-            <input type="email" name="email" required>
+        <form method="post" action="../pages/inscription_logic.php">
+            <label for="email">Adresse e-mail :</label>
+            <input type="email" id="email" name="email" required>
+            <span class="error"><?php echo $emailError; ?></span>
 
             <label for="password">Mot de passe :</label>
-            <input type="password" name="password" required>
-
-            <label for="confirmPassword">Confirmer le mot de passe :</label>
-            <input type="password" name="confirmPassword" required>
-
-            <label for="username">Nom d'utilisateur :</label>
-            <input type="text" name="username" required>
+            <input type="password" id="password" name="password" required>
+            <span class="error"><?php echo $passwordError; ?></span>
 
             <label for="fname">Prénom :</label>
-            <input type="text" name="fname" required>
+            <input type="text" id="fname" name="fname" required>
+            <span class="error"><?php echo $fnameError; ?></span>
 
-            <label for="lname">Nom :</label>
-            <input type="text" name="lname" required>
+            <label for="lname">Nom de famille :</label>
+            <input type="text" id="lname" name="lname" required>
+            <span class="error"><?php echo $lnameError; ?></span>
 
-            <input type="submit" name="inscription" value="S'inscrire">
+            <!-- Ajoutez d'autres champs ici en fonction de vos besoins -->
+
+            <input type="submit" name="submit" value="S'inscrire">
         </form>
 
-        <p>Déjà inscrit ? <a href="login.php">Connectez-vous ici</a>.</p>
+        <span class="error"><?php echo $registrationError; ?></span>
     </div>
 
     <footer>

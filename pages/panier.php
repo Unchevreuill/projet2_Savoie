@@ -19,9 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
         exit();
     }
 }
-
-// Inclure le fichier de connexion à la base de données
-include_once('../db_connect.php');
 ?>
 
 <!DOCTYPE html>
@@ -34,8 +31,11 @@ include_once('../db_connect.php');
 </head>
 <body>
     <header>
+        <div class="login-button">
+            <a href="../index.php">Accueil</a>
+        </div>
         <div class="header-content">
-            <h1>Teccart Wear</h1>
+            <h1>Panier</h1>
             <div class="cart">
                 <a href="panier.php">
                     <img id="cart-icon" src="../images/cart-icon.png" alt="Panier">
@@ -58,15 +58,15 @@ include_once('../db_connect.php');
             foreach ($_SESSION['panier'] as $index => $produit) {
                 echo '<div class="product">';
                 
-                // Vérifier si la clé 'name' existe et n'est pas vide
-                if (isset($produit['name']) && !empty($produit['name'])) {
+                // Vérifier si la clé 'name' existe avant de l'utiliser
+                if (isset($produit['name'])) {
                     echo '<h3>' . $produit['name'] . '</h3>';
                 } else {
                     echo '<h3>Produit sans nom</h3>';
                 }
                 
-                // Vérifier si la clé 'price' existe et n'est pas vide
-                if (isset($produit['price']) && !empty($produit['price'])) {
+                // Vérifier si la clé 'price' existe avant de l'utiliser
+                if (isset($produit['price'])) {
                     echo '<p>Prix : $' . number_format($produit['price'], 2) . '</p>';
                     // Ajouter le prix au total
                     $total += $produit['price'];
@@ -74,9 +74,8 @@ include_once('../db_connect.php');
                     echo '<p>Prix non disponible</p>';
                 }
 
-                // Vérifier si la clé 'url_img' existe et n'est pas vide
-                if (isset($produit['url_img']) && !empty($produit['url_img'])) {
-                    // Afficher l'image à partir du dossier images
+                // Vérifier si la clé 'url_img' existe et si le fichier image existe sur le serveur
+                if (isset($produit['url_img']) && file_exists('../images/' . $produit['url_img'])) {
                     echo '<img src="../images/' . $produit['url_img'] . '" alt="' . $produit['name'] . '">';
                 } else {
                     echo '<p>Image non disponible</p>';
