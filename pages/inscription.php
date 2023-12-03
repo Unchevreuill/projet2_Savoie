@@ -7,43 +7,43 @@
     <link rel="stylesheet" href="../css/inscription.css">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1>Inscription</h1>
-        </div>
-    </header>
-    
     <div class="container">
-        <!-- Assurez-vous que le chemin vers votre fichier inscription_logic.php est correct -->
-        <?php include_once '../pages/inscription_logic.php'; ?>
-
-        <form method="post" action="../pages/inscription_logic.php">
+        <h2>Inscription</h2>
+        <form action="../pages/inscription_logic.php" method="post">
+            <!-- Informations de base -->
             <label for="email">Adresse e-mail :</label>
-            <input type="email" id="email" name="email" required>
-            <span class="error"><?php echo $emailError; ?></span>
-
+            <input type="email" name="email" required>
+            
             <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="password" required>
-            <span class="error"><?php echo $passwordError; ?></span>
+            <input type="password" name="password" required>
+
+            <label for="confirm_password">Confirmer le mot de passe :</label>
+            <input type="password" name="confirm_password" required>
 
             <label for="fname">Prénom :</label>
-            <input type="text" id="fname" name="fname" required>
-            <span class="error"><?php echo $fnameError; ?></span>
+            <input type="text" name="fname" required>
 
             <label for="lname">Nom de famille :</label>
-            <input type="text" id="lname" name="lname" required>
-            <span class="error"><?php echo $lnameError; ?></span>
+            <input type="text" name="lname" required>
 
-            <!-- Ajoutez d'autres champs ici en fonction de vos besoins -->
+            <!-- Informations d'adresse -->
+            <label for="street_name">Nom de rue :</label>
+            <input type="text" name="street_name" required>
 
-            <input type="submit" name="submit" value="S'inscrire">
+            <label for="street_nb">Numéro de rue :</label>
+            <input type="number" name="street_nb" required>
+
+            <label for="city">Ville :</label>
+            <input type="text" name="city" required>
+
+            <label for="province">Province :</label>
+            <input type="text" name="province" required>
+
+            <label for="zipcode">Code postal :</label>
+            <input type="text" name="zipcode" required>
+
+            <button type="submit" name="submit">S'inscrire</button>
         </form>
-
-        <span class="error"><?php echo $registrationError; ?></span>
     </div>
-
-    <footer>
-        <p>&copy; 2023 Teccart Wear. Tous droits réservés.</p>
-    </footer>
 </body>
 </html>

@@ -1,75 +1,76 @@
 <?php
-session_start();
-
-// Initialiser les variables
-$email = $password = $fname = $lname = '';
+// Inclure le fichier de connexion à la base de données
+require_once '../db_connect.php';
 
 // Initialisation des variables d'erreur
-$emailError = $passwordError = $fnameError = $lnameError = $registrationError = '';
+$emailError = $passwordError = $fnameError = $lnameError = $registrationError = $usernameError = $confirmPasswordError = '';
 
-// Vérifier si le formulaire a été soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-    // Validation de l'e-mail
-    if (empty($_POST['email'])) {
+    // Récupérer les données du formulaire
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirm_password'];
+    $fname = $_POST['fname'];
+    $lname = $_POST['lname'];
+    $streetName = $_POST['street_name'];
+    $streetNb = $_POST['street_nb'];
+    $city = $_POST['city'];
+    $province = $_POST['province'];
+    $zipcode = $_POST['zipcode'];
+
+    // Validation de l'email
+    if (empty($email)) {
         $emailError = 'Veuillez entrer votre adresse e-mail.';
-    } else {
-        $email = $_POST['email'];
-        // Vérifier si l'e-mail est bien formaté
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $emailError = 'Adresse e-mail invalide.';
-        }
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $emailError = 'Veuillez entrer une adresse e-mail valide.';
     }
 
     // Validation du mot de passe
-    if (empty($_POST['password'])) {
+    if (empty($password)) {
         $passwordError = 'Veuillez entrer votre mot de passe.';
-    } else {
-        $password = $_POST['password'];
-        // Vous pouvez ajouter d'autres validations pour le mot de passe ici
+    } elseif (strlen($password) < 6) {
+        $passwordError = 'Le mot de passe doit comporter au moins 6 caractères.';
+    }
+
+    // Validation de la confirmation du mot de passe
+    if (empty($confirmPassword) || $confirmPassword !== $password) {
+        $passwordError = 'Les mots de passe ne correspondent pas.';
     }
 
     // Validation du prénom
-    if (empty($_POST['fname'])) {
+    if (empty($fname)) {
         $fnameError = 'Veuillez entrer votre prénom.';
-    } else {
-        $fname = $_POST['fname'];
     }
 
     // Validation du nom de famille
-    if (empty($_POST['lname'])) {
+    if (empty($lname)) {
         $lnameError = 'Veuillez entrer votre nom de famille.';
-    } else {
-        $lname = $_POST['lname'];
     }
 
-    // Si toutes les validations sont réussies, procéder à l'inscription
+    // Si aucune erreur de validation
     if (empty($emailError) && empty($passwordError) && empty($fnameError) && empty($lnameError)) {
-        // Inclure le fichier de connexion à la base de données
-        require_once '../db_connect.php';
-
-        // Hacher le mot de passe
+        // Hasher le mot de passe
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Requête SQL pour insérer l'utilisateur dans la base de données
-        $query = "INSERT INTO user (email, pwd, fname, lname, role_id) VALUES (:email, :pwd, :fname, :lname, :role_id)";
+        // Insérer l'utilisateur dans la base de données
+        $query = "INSERT INTO user (email, pwd, fname, lname, role_id, shipping_address_id) VALUES (:email, :password, :fname, :lname, 3, NULL)";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':pwd', $hashedPassword);
+        $stmt->bindParam(':password', $hashedPassword);
         $stmt->bindParam(':fname', $fname);
         $stmt->bindParam(':lname', $lname);
-        $stmt->bindValue(':role_id', 3); // 3 est l'ID du rôle "client"
-        
-        // Exécuter la requête
+
         try {
             $stmt->execute();
-
-            // Rediriger vers la page de connexion après l'inscription
-            header('Location: ../pages/login.php');
+            // L'inscription a réussi, rediriger vers l'index
+            header('Location: ../index.php');
             exit();
         } catch (PDOException $e) {
-            // En cas d'erreur d'inscription
+            // Erreur lors de l'insertion dans la base de données
             $registrationError = 'Erreur d\'inscription : ' . $e->getMessage();
         }
     }
 }
+
+// Le reste de votre logique...
 ?>

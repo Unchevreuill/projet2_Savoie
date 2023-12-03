@@ -1,13 +1,12 @@
 <?php
 session_start();
 
-// Inclure le fichier de connexion à la base de données
-include_once('./db_connect.php');
-
-// Récupérer les produits depuis la base de données
-$query = "SELECT * FROM product";
-$stmt = $pdo->query($query);
-$produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Exemple de produit
+$produits = array(
+    array('nom' => 'Chemise Élégante', 'prix' => 29.99, 'image' => 'chemise.jpg'),
+    array('nom' => 'Robe d\'Été', 'prix' => 39.99, 'image' => 'robe.jpg'),
+    array('nom' => 'Jeans Classiques', 'prix' => 49.99, 'image' => 'jeans.jpg')
+);
 
 // Vérifier si le panier existe dans la session, sinon le créer
 if (!isset($_SESSION['panier'])) {
@@ -40,6 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
                     <span id="cart-count"><?php echo count($_SESSION['panier']); ?></span>
                 </a>
             </div>
+            <?php
+            // Vérifier si l'utilisateur est connecté
+            if (isset($_SESSION['user_lname'])) {
+                echo '<div class="user-greeting">Bonjour ' . $_SESSION['user_lname'] . '</div>';
+            }
+            ?>
         </div>
     </header>
     
@@ -61,17 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
         // Afficher les produits
         foreach ($produits as $index => $produit) {
             echo '<div class="product">';
-            // Vérifier si la clé 'url_img' existe avant de l'utiliser
-            if (isset($produit['url_img'])) {
-                echo '<img src="../projet2_Savoie/images/' . $produit['url_img'] . '" alt="' . $produit['name'] . '">';
-
-
-
-            } else {
-                echo '<p>Image non disponible</p>';
-            }
-            echo '<h3>' . $produit['name'] . '</h3>';
-            echo '<p>Prix : $' . number_format($produit['price'], 2) . '</p>';
+            echo '<img src="./images/' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
+            echo '<h3>' . $produit['nom'] . '</h3>';
+            echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
             echo '<form method="post" action="index.php">';
             echo '<input type="hidden" name="index_produit" value="' . $index . '">';
             echo '<input type="submit" name="acheter" value="Acheter">';
