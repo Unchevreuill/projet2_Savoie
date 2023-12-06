@@ -10,10 +10,12 @@ class IndexController {
     }
 
     public function index() {
-        // Get product data from the model
-        $products = $this->model->getAllProducts();
+        // You can include any logic here that needs to be executed for the main page
+        // For example, fetching data from the model
+        $data = $this->model->getData();
 
-        // Render the index view with the product data
-        $this->view->render($products);
+        // Pass the data to the view for rendering
+        $this->view->render($data);
     }
 }
+?>
