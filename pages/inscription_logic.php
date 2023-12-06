@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // Inclure le fichier de connexion à la base de données
 require_once '../db_connect.php';
 
@@ -12,11 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $confirmPassword = $_POST['confirm_password'];
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
-    $streetName = $_POST['street_name'];
-    $streetNb = $_POST['street_nb'];
-    $city = $_POST['city'];
-    $province = $_POST['province'];
-    $zipcode = $_POST['zipcode'];
 
     // Validation de l'email
     if (empty($email)) {
@@ -34,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
     // Validation de la confirmation du mot de passe
     if (empty($confirmPassword) || $confirmPassword !== $password) {
-        $passwordError = 'Les mots de passe ne correspondent pas.';
+        $confirmPasswordError = 'Les mots de passe ne correspondent pas.';
     }
 
     // Validation du prénom
@@ -49,28 +46,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
     // Si aucune erreur de validation
     if (empty($emailError) && empty($passwordError) && empty($fnameError) && empty($lnameError)) {
-        // Hasher le mot de passe
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Insérer l'utilisateur dans la base de données
-        $query = "INSERT INTO user (email, pwd, fname, lname, role_id, shipping_address_id) VALUES (:email, :password, :fname, :lname, 3, NULL)";
-        $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hashedPassword);
-        $stmt->bindParam(':fname', $fname);
-        $stmt->bindParam(':lname', $lname);
+        // Commencer une transaction
+        $pdo->beginTransaction();
 
         try {
-            $stmt->execute();
-            // L'inscription a réussi, rediriger vers l'index
-            header('Location: ../index.php');
+            // Hasher le mot de passe
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            // Insérer l'utilisateur dans la table "user"
+            $queryUser = "INSERT INTO user (email, pwd, fname, lname, role_id) VALUES (:email, :password, :fname, :lname, 3)";
+            $stmtUser = $pdo->prepare($queryUser);
+            $stmtUser->bindParam(':email', $email);
+            $stmtUser->bindParam(':password', $hashedPassword);
+            $stmtUser->bindParam(':fname', $fname);
+            $stmtUser->bindParam(':lname', $lname);
+            $stmtUser->execute();
+
+            // Récupérer l'ID de l'utilisateur nouvellement créé
+            $userId = $pdo->lastInsertId();
+
+            // Insérer l'adresse dans la table "address"
+            $queryAddress = "INSERT INTO address (user_id) VALUES (:userId)";
+            $stmtAddress = $pdo->prepare($queryAddress);
+            $stmtAddress->bindParam(':userId', $userId);
+            $stmtAddress->execute();
+
+            // Valider la transaction
+            $pdo->commit();
+
+            // L'inscription a réussi, rediriger vers l'inscription avec un message de confirmation
+            header('Location: ../pages/inscription.php?success=1');
             exit();
         } catch (PDOException $e) {
-            // Erreur lors de l'insertion dans la base de données
+            // Erreur lors de l'insertion dans la base de données, annuler la transaction
+            $pdo->rollBack();
             $registrationError = 'Erreur d\'inscription : ' . $e->getMessage();
         }
     }
 }
 
-// Le reste de votre logique...
+
+
 ?>
+

@@ -19,23 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
         exit();
     }
 }
+
+// Inclure le fichier de connexion à la base de données
+include_once('../db_connect.php');
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panier - Teccart Wear</title>
     <link rel="stylesheet" href="../css/panier.css">
 </head>
+
 <body>
     <header>
-        <div class="login-button">
-            <a href="../index.php">Accueil</a>
-        </div>
         <div class="header-content">
-            <h1>Panier</h1>
+            <h1>Teccart Wear</h1>
             <div class="cart">
                 <a href="panier.php">
                     <img id="cart-icon" src="../images/cart-icon.png" alt="Panier">
@@ -44,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
             </div>
         </div>
     </header>
-    
+
     <div class="container">
         <?php
         // Vérifier si le panier est vide
@@ -57,26 +59,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
             // Afficher les produits du panier
             foreach ($_SESSION['panier'] as $index => $produit) {
                 echo '<div class="product">';
-                
-                // Vérifier si la clé 'name' existe avant de l'utiliser
-                if (isset($produit['name'])) {
-                    echo '<h3>' . $produit['name'] . '</h3>';
+
+                // Vérifier si la clé 'nom' existe et n'est pas vide
+                if (isset($produit['nom']) && !empty($produit['nom'])) {
+                    echo '<h3>' . $produit['nom'] . '</h3>';
                 } else {
                     echo '<h3>Produit sans nom</h3>';
                 }
-                
-                // Vérifier si la clé 'price' existe avant de l'utiliser
-                if (isset($produit['price'])) {
-                    echo '<p>Prix : $' . number_format($produit['price'], 2) . '</p>';
+
+
+                // Vérifier si la clé 'prix' existe et n'est pas vide
+                if (isset($produit['prix']) && !empty($produit['prix'])) {
+                    echo '<p>Prix : $' . number_format($produit['prix'], 2) . '</p>';
                     // Ajouter le prix au total
-                    $total += $produit['price'];
+                    $total += $produit['prix'];
                 } else {
                     echo '<p>Prix non disponible</p>';
                 }
 
-                // Vérifier si la clé 'url_img' existe et si le fichier image existe sur le serveur
-                if (isset($produit['url_img']) && file_exists('../images/' . $produit['url_img'])) {
-                    echo '<img src="../images/' . $produit['url_img'] . '" alt="' . $produit['name'] . '">';
+                // Vérifier si la clé 'image' existe et n'est pas vide
+                if (isset($produit['image']) && !empty($produit['image'])) {
+                    // Afficher l'image à partir du dossier images
+                    echo '<img src="../images/' . $produit['image'] . '" alt="' . $produit['nom'] . '">';
                 } else {
                     echo '<p>Image non disponible</p>';
                 }
@@ -107,4 +111,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retirer_produit'])) {
         <p>&copy; 2023 Teccart Wear. Tous droits réservés.</p>
     </footer>
 </body>
+
 </html>

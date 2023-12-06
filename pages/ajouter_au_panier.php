@@ -31,12 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acheter']) && isset($
                 'image' => $product['url_img']
             );
 
-            // Rediriger vers la page d'accueil après l'ajout au panier
-            header('Location: ../index.php');
+            // Rediriger vers la page d'accueil avec un message de succès
+            header('Location: ../index.php?success=produit_ajoute');
             exit();
         } else {
-            // Rediriger vers la page d'accueil si le produit n'est pas trouvé
-            header('Location: ../index.php');
+            // Rediriger vers la page d'accueil avec un message d'erreur si le produit n'est pas trouvé
+            header('Location: ../index.php?error=produit_non_trouve');
             exit();
         }
     } catch (PDOException $e) {
