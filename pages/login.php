@@ -8,7 +8,7 @@ $emailError = $passwordError = $loginError = '';
 include_once('../db_connect.php');
 
 // Inclure la logique de connexion
-//include_once('../pages/login_logic.php');
+include_once('../pages/login_logic.php');
 ?>
 
 <!DOCTYPE html>
