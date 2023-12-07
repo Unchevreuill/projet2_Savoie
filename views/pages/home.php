@@ -1,3 +1,15 @@
+<?php
+session_start(); // Démarrez la session si elle n'a pas encore été démarrée
+
+include_once('../../utils/DbConfig.php');
+
+// Créer une instance de la classe DbConfig
+$dbConfig = new DbConfig();
+
+// Obtenir l'objet PDO
+$pdo = $dbConfig->getConnection();
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -5,6 +17,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Accueil</title>
+  
     <link rel="stylesheet" href="../css/home.css"> 
 </head>
 
@@ -23,7 +36,7 @@
 
     <nav>
         <ul>
-            <li><a href="accueil.php">Accueil</a></li>
+            <li><a href="home.php">Accueil</a></li>
             <li><a href="inscription.php">Inscription</a></li>
             <li><a href="login.php">Connexion</a></li>
             <li><a href="panier.php">Panier</a></li>
@@ -32,31 +45,35 @@
 
     <main>
         <div class="banner">
-            <img src="../images/image.png" alt="Bannière Teccart Wear">
+            <img src="../images/banner.jpg" alt="Bannière">
         </div>
-        <p>Bienvenue sur la page d'accueil de Teccart Wear.</p>
 
-        <section class="new-products">
+        <div class="new-products">
             <h2>Nouveaux Produits</h2>
-            <?php
-            foreach ($newProducts as $product) {
-                echo '<div class="product">';
-                echo '<h3>' . $product['name'] . '</h3>';
-                echo '<p>' . $product['description'] . '</p>';
-                echo '<p>Prix: $' . number_format($product['price'], 2) . '</p>';
-                echo '<img src="' . $product['url_img'] . '" alt="' . $product['name'] . '">';
-                echo '<button>Ajouter au panier</button>';
-                echo '</div>';
-            }
-            ?>
-        </section>
 
-
+            <?php foreach ($latestProducts as $product): ?>
+                <div class="product">
+                    <img src="../images/<?php echo $product['url_img']; ?>" alt="<?php echo $product['name']; ?>">
+                    <h3><?php echo $product['name']; ?></h3>
+                    <p>Prix : $<?php echo $product['price']; ?></p>
+                    <!-- Remplacez le commentaire par la description réelle -->
+                    <p>Description : <?php echo "Description du produit"; ?></p>
+                    <button onclick="addToCart(<?php echo $product['id']; ?>)">Ajouter au panier</button>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </main>
 
     <footer>
         <p>&copy; <?php echo date("Y"); ?> Teccart Wear. Tous droits réservés.</p>
     </footer>
+
+    <script>
+        function addToCart(productId) {
+            // Ajoutez la logique pour ajouter le produit au panier, si nécessaire
+            console.log('Produit ajouté au panier : ' + productId);
+        }
+    </script>
 </body>
 
 </html>
