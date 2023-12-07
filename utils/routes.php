@@ -19,7 +19,6 @@ if (array_key_exists($url, $routes)) {
     // Instancier le contrôleur et appeler la méthode
     $controller = new $controllerName();
     $controller->$methodName();
-} else {
-    // Gérer d'autres cas ou rediriger vers une page par défaut
-    // ...
-}
+} 
+    
+

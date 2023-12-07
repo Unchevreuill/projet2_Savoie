@@ -1,13 +1,17 @@
 <?php
 session_start(); // Démarrez la session si elle n'a pas encore été démarrée
 
-include_once('../../utils/DbConfig.php');
-
+// Inclure le fichier de configuration de la base de données
+include_once('../../utils/DBConfig.php');
 // Créer une instance de la classe DbConfig
 $dbConfig = new DbConfig();
 
 // Obtenir l'objet PDO
 $pdo = $dbConfig->getConnection();
+
+// Récupérer les trois derniers produits de la base de données
+$query = $pdo->query("SELECT * FROM product ORDER BY id DESC LIMIT 3");
+$latestProducts = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -17,8 +21,7 @@ $pdo = $dbConfig->getConnection();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Accueil</title>
-  
-    <link rel="stylesheet" href="../css/home.css"> 
+    <link rel="stylesheet" href="../../css/home.css">
 </head>
 
 <body>
@@ -27,7 +30,7 @@ $pdo = $dbConfig->getConnection();
             <h1>Teccart Wear</h1>
             <div class="cart">
                 <a href="panier.php">
-                    <img id="cart-icon" src="../images/cart-icon.png" alt="Panier">
+                    <img id="cart-icon" src="../../images/cart-icon.png" alt="Panier">
                     <span id="cart-count"><?php echo isset($_SESSION['panier']) ? count($_SESSION['panier']) : 0; ?></span>
                 </a>
             </div>
@@ -44,16 +47,14 @@ $pdo = $dbConfig->getConnection();
     </nav>
 
     <main>
-        <div class="banner">
-            <img src="../images/banner.jpg" alt="Bannière">
-        </div>
+       
 
         <div class="new-products">
             <h2>Nouveaux Produits</h2>
 
             <?php foreach ($latestProducts as $product): ?>
                 <div class="product">
-                    <img src="../images/<?php echo $product['url_img']; ?>" alt="<?php echo $product['name']; ?>">
+                    <img src="../../images/<?php echo $product['url_img']; ?>" alt="<?php echo $product['name']; ?>">
                     <h3><?php echo $product['name']; ?></h3>
                     <p>Prix : $<?php echo $product['price']; ?></p>
                     <!-- Remplacez le commentaire par la description réelle -->
