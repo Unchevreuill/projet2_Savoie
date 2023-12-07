@@ -1,23 +1,18 @@
-<?php
-// Vous pouvez inclure ici des fichiers communs ou des configurations nécessaires pour votre projet
-session_start(); // Démarrez la session si elle n'a pas encore été démarrée
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Accueil</title>
-    <!-- Utilisez des chemins relatifs pour les ressources -->
-    <link rel="stylesheet" href="../css/style.css"> <!-- Ajoutez vos propres fichiers CSS -->
+    <link rel="stylesheet" href="../css/home.css"> 
 </head>
+
 <body>
     <header>
         <div class="header-content">
             <h1>Teccart Wear</h1>
             <div class="cart">
-                <!-- Utilisez des chemins relatifs pour les liens -->
                 <a href="panier.php">
                     <img id="cart-icon" src="../images/cart-icon.png" alt="Panier">
                     <span id="cart-count"><?php echo isset($_SESSION['panier']) ? count($_SESSION['panier']) : 0; ?></span>
@@ -28,7 +23,6 @@ session_start(); // Démarrez la session si elle n'a pas encore été démarrée
 
     <nav>
         <ul>
-            <!-- Utilisez des chemins relatifs pour les liens -->
             <li><a href="accueil.php">Accueil</a></li>
             <li><a href="inscription.php">Inscription</a></li>
             <li><a href="login.php">Connexion</a></li>
@@ -37,11 +31,32 @@ session_start(); // Démarrez la session si elle n'a pas encore été démarrée
     </nav>
 
     <main>
+        <div class="banner">
+            <img src="../images/image.png" alt="Bannière Teccart Wear">
+        </div>
         <p>Bienvenue sur la page d'accueil de Teccart Wear.</p>
+
+        <section class="new-products">
+            <h2>Nouveaux Produits</h2>
+            <?php
+            foreach ($newProducts as $product) {
+                echo '<div class="product">';
+                echo '<h3>' . $product['name'] . '</h3>';
+                echo '<p>' . $product['description'] . '</p>';
+                echo '<p>Prix: $' . number_format($product['price'], 2) . '</p>';
+                echo '<img src="' . $product['url_img'] . '" alt="' . $product['name'] . '">';
+                echo '<button>Ajouter au panier</button>';
+                echo '</div>';
+            }
+            ?>
+        </section>
+
+
     </main>
 
     <footer>
         <p>&copy; <?php echo date("Y"); ?> Teccart Wear. Tous droits réservés.</p>
     </footer>
 </body>
+
 </html>
