@@ -1,4 +1,4 @@
-<?php
+voici routes.php <?php
 
 $url = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
@@ -21,4 +21,3 @@ if (array_key_exists($url, $routes)) {
     $controller->$methodName();
 } 
     
-
