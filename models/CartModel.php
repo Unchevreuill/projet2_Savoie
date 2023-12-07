@@ -1,45 +1,103 @@
 <?php
 
-class CartModel {
+namespace projet2_Savoie\Models;
+
+use PDO;
+
+class CartModel
+{
     private $db;
 
-    public function __construct($db) {
+    public function __construct(PDO $db)
+    {
         $this->db = $db;
     }
 
-    public function addToCart($product_id) {
-        // Retrieve product details from the database based on $product_id
-        $productDetails = $this->getProductDetails($product_id);
+    // Obtient le contenu actuel du panier
+    public function getCartContents()
+    {
+        $userId = $_SESSION['user_id'];
+        
+        // Sélectionnez les produits du panier pour l'utilisateur actuel
+        $query = $this->db->prepare("SELECT p.id, p.name, p.price, p.url_img, o.qtty FROM product p
+                                     INNER JOIN order_has_product o ON p.id = o.product_id
+                                     INNER JOIN user_order uo ON o.user_order_id = uo.id
+                                     WHERE uo.user_id = :userId");
 
-        // Check if the product exists
-        if ($productDetails) {
-            // Add the product to the user's cart
-            $_SESSION['cart'][] = [
-                'id' => $productDetails['id'],
-                'name' => $productDetails['name'],
-                'price' => $productDetails['price'],
-                'image' => $productDetails['url_img']
-            ];
+        $query->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $query->execute();
 
-            return true; // Addition to cart successful
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Ajoute un produit au panier
+    public function addToCart($productId, $quantity)
+    {
+        $userId = $_SESSION['user_id'];
+
+        // Vérifiez d'abord si le produit existe déjà dans le panier de l'utilisateur
+        $existingProduct = $this->db->prepare("SELECT * FROM order_has_product
+                                              WHERE user_order_id = (SELECT id FROM user_order WHERE user_id = :userId AND order_date IS NULL)
+                                              AND product_id = :productId");
+
+        $existingProduct->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $existingProduct->bindParam(':productId', $productId, PDO::PARAM_INT);
+        $existingProduct->execute();
+
+        $result = $existingProduct->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            // Le produit existe déjà, mettez à jour la quantité
+            $updateQuery = $this->db->prepare("UPDATE order_has_product
+                                              SET qtty = qtty + :quantity
+                                              WHERE user_order_id = (SELECT id FROM user_order WHERE user_id = :userId AND order_date IS NULL)
+                                              AND product_id = :productId");
+
+            $updateQuery->bindParam(':userId', $userId, PDO::PARAM_INT);
+            $updateQuery->bindParam(':productId', $productId, PDO::PARAM_INT);
+            $updateQuery->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+            
+            return $updateQuery->execute();
         } else {
-            return false; // Product not found
+            // Le produit n'existe pas encore dans le panier, ajoutez-le
+            $insertQuery = $this->db->prepare("INSERT INTO order_has_product (user_order_id, product_id, qtty)
+                                               VALUES ((SELECT id FROM user_order WHERE user_id = :userId AND order_date IS NULL), :productId, :quantity)");
+
+            $insertQuery->bindParam(':userId', $userId, PDO::PARAM_INT);
+            $insertQuery->bindParam(':productId', $productId, PDO::PARAM_INT);
+            $insertQuery->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+            
+            return $insertQuery->execute();
         }
     }
 
-    public function getProductDetails($product_id) {
-        // Query to retrieve product details from the database based on $product_id
-        $query = "SELECT * FROM product WHERE id = :product_id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+    // Supprime un produit du panier
+    public function removeProductFromCart($productId)
+    {
+        $userId = $_SESSION['user_id'];
 
-        try {
-            $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            // Handle database error
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
+        // Supprimez le produit du panier
+        $query = $this->db->prepare("DELETE FROM order_has_product
+                                     WHERE user_order_id = (SELECT id FROM user_order WHERE user_id = :userId AND order_date IS NULL)
+                                     AND product_id = :productId");
+
+        $query->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $query->bindParam(':productId', $productId, PDO::PARAM_INT);
+
+        return $query->execute();
+    }
+
+    // Vide complètement le panier
+    public function clearCart()
+    {
+        $userId = $_SESSION['user_id'];
+
+        // Supprimez tous les produits du panier
+        $query = $this->db->prepare("DELETE FROM order_has_product
+                                     WHERE user_order_id = (SELECT id FROM user_order WHERE user_id = :userId AND order_date IS NULL)");
+
+        $query->bindParam(':userId', $userId, PDO::PARAM_INT);
+
+        return $query->execute();
     }
 }

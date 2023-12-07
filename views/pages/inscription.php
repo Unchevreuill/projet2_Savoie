@@ -13,7 +13,7 @@
             <!-- Informations de base -->
             <label for="email">Adresse e-mail :</label>
             <input type="email" name="email" required>
-            
+
             <label for="password">Mot de passe :</label>
             <input type="password" name="password" required>
 

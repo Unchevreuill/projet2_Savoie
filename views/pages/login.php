@@ -32,7 +32,7 @@ include_once('../pages/login_logic.php');
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <div class="form-group">
                 <label for="email">Adresse E-mail:</label>
-                <input type="email" id="email" name="email" class="input-field" value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>">
+                <input type="email" id="email" name="email" class="input-field" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                 <span class="error"><?php echo isset($emailError) ? $emailError : ''; ?></span>
             </div>
 
@@ -47,11 +47,9 @@ include_once('../pages/login_logic.php');
             </div>
 
             <span class="error"><?php echo isset($loginError) ? $loginError : ''; ?></span>
-
         </form>
 
         <p>Pas encore inscrit ? <a href="../pages/inscription.php">Inscrivez-vous ici</a>.</p>
-
     </div>
 
     <footer>
