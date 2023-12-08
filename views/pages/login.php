@@ -1,59 +1,62 @@
 <?php
-session_start();
+namespace projet2_Savoie\Controllers;
 
-// Initialiser les variables d'erreur
-$emailError = $passwordError = $loginError = '';
+use projet2_Savoie\Models\UserModel;
+use projet2_Savoie\Views\LoginView;
 
-// Inclure le fichier de connexion à la base de données
-include_once('../../utils/DBConfig.php');
+class LoginController
+{
+    private $userModel;
+    private $loginView;
 
-// Inclure la logique de connexion
-//include_once('../pages/logic/login_logic.php');
-?>
+    public function __construct(UserModel $userModel, LoginView $loginView)
+    {
+        $this->userModel = $userModel;
+        $this->loginView = $loginView;
+    }
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teccart Wear - Connexion</title>
-    <link rel="stylesheet" href="../../css/login.css">
-</head>
-<body>
-    <header>
-        <div class="header-content">
-            <h1>Teccart Wear</h1>
-        </div>
-    </header>
+    public function index()
+    {
+        // Check if the form is submitted
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["connexion"])) {
+            // Perform login logic
+            $this->performLogin();
+        }
 
-    <div class="container">
-        <h2>Connexion</h2>
+        // Render the login view
+        $this->loginView->render();
+    }
 
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <div class="form-group">
-                <label for="email">Adresse E-mail:</label>
-                <input type="email" id="email" name="email" class="input-field" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
-                <span class="error"><?php echo isset($emailError) ? $emailError : ''; ?></span>
-            </div>
+    private function performLogin()
+    {
+        // Retrieve user input
+        $email = trim($_POST["email"]);
+        $password = trim($_POST["password"]);
 
-            <div class="form-group">
-                <label for="password">Mot de passe:</label>
-                <input type="password" id="password" name="password" class="input-field">
-                <span class="error"><?php echo isset($passwordError) ? $passwordError : ''; ?></span>
-            </div>
+        // Validate email and password (you can add more validation)
+        if (empty($email)) {
+            $this->loginView->setLoginError("Veuillez saisir votre adresse e-mail.");
+            return;
+        }
 
-            <div class="form-group">
-                <input type="submit" name="connexion" value="Se connecter" class="login-button">
-            </div>
+        if (empty($password)) {
+            $this->loginView->setLoginError("Veuillez saisir votre mot de passe.");
+            return;
+        }
 
-            <span class="error"><?php echo isset($loginError) ? $loginError : ''; ?></span>
-        </form>
+        // Check user credentials
+        $user = $this->userModel->getUserByEmail($email);
 
-        <p>Pas encore inscrit ? <a href="../pages/inscription.php">Inscrivez-vous ici</a>.</p>
-    </div>
-
-    <footer>
-        <p>&copy; 2023 Teccart Wear. Tous droits réservés.</p>
-    </footer>
-</body>
-</html>
+        if ($user && password_verify($password, $user['password'])) {
+            // Login successful, redirect or perform other actions
+            // For example, you can set a session variable to indicate the user is logged in
+            $_SESSION['user_id'] = $user['id'];
+            // Redirect to another page
+            header('Location: /php2/projet2_Savoie/views/pages/home.php');
+            exit();
+        } else {
+            // Login failed, display error message
+            $this->loginView->setLoginError("Adresse e-mail ou mot de passe incorrect.");
+        }
+    }
+}
