@@ -13,19 +13,19 @@ class HomeModel
         $this->db = $db;
     }
 
-    // Exemple : Récupérer tous les produits
+    //Récupérer tous les produits
     public function getAllProducts()
     {
         $query = $this->db->query("SELECT * FROM product");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Exemple : Récupérer les produits vedettes
+    //Récupérer les produits vedettes
     public function getFeaturedProducts()
     {
         $query = $this->db->query("SELECT * FROM product WHERE featured = 1");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Ajoutez d'autres méthodes en fonction des besoins de votre modèle
+
 }

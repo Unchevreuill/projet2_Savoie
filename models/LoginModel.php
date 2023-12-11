@@ -12,11 +12,28 @@ class LoginModel
         $this->db = $db;
     }
 
-    // Méthode pour vérifier les informations de connexion
     public function checkLogin($email, $password)
     {
-        // TODO: Implement your login logic here
-        // For example, query the database to check if the email and password match
-        // Return true if login is successful, false otherwise
+        // Vérifiez si l'e-mail existe dans la base de données
+        $user = $this->getUserByEmail($email);
+
+        if ($user) {
+            // Vérifiez le mot de passe
+            if (password_verify($password, $user['password'])) {
+                return true; // Connexion réussie
+            }
+        }
+
+        return false; // Échec de la connexion
+    }
+
+    public function getUserByEmail($email)
+    {
+        $query = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+        $query->bindParam(':email', $email, PDO::PARAM_STR);
+        $query->execute();
+
+        return $query->fetch(PDO::FETCH_ASSOC);
     }
 }
+?>

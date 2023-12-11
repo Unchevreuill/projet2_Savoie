@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
             <h2>Nouveaux Produits</h2>
 
             <?php foreach ($latestProducts as $product): ?>
-                <div class="product">
+                <div class="product"><br><br><br><br><br>
                     <img src="../../images/<?php echo $product['url_img']; ?>" alt="<?php echo $product['name']; ?>">
                     <h3><?php echo $product['name']; ?></h3>
                     <p>Prix : $<?php echo $product['price']; ?></p>

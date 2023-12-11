@@ -2,27 +2,33 @@
 
 class DbConfig
 {
-    private $_host = 'localhost';
-    private $_username = 'root';
-    private $_password = '';
-    private $_database = 'ecom2_project';
-    private $_dsn = '';
-    protected $pdo;
+    const HOST = 'localhost';
+    const USERNAME = 'root';
+    const PASSWORD = '';
+    const DATABASE = 'ecom2_project';
+
+    private $pdo;
+
+    private static $instance;
 
     public function __construct()
     {
-        $this->_dsn = "mysql:host=$this->_host;dbname=$this->_database;charset=UTF8";
+        $dsn = "mysql:host=" . self::HOST . ";dbname=" . self::DATABASE . ";charset=UTF8";
 
         try {
-            $this->pdo = new PDO(
-                $this->_dsn,
-                $this->_username,
-                $this->_password
-            );
+            $this->pdo = new PDO($dsn, self::USERNAME, self::PASSWORD);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            throw new Exception("Database connection error: " . $e->getMessage());
+            throw new Exception("Erreur de connexion à la base de données : " . $e->getMessage());
         }
+    }
+
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
 
     public function getConnection()

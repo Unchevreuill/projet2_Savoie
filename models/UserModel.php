@@ -12,7 +12,17 @@ class UserModel
         $this->db = $db;
     }
 
-    // Get user details by email
+    // Retrieve user information based on user ID
+    public function getUserById($userId)
+    {
+        $query = $this->db->prepare("SELECT * FROM user WHERE id = :userId");
+        $query->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $query->execute();
+
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Retrieve user information based on email
     public function getUserByEmail($email)
     {
         $query = $this->db->prepare("SELECT * FROM user WHERE email = :email");
@@ -21,7 +31,5 @@ class UserModel
 
         return $query->fetch(PDO::FETCH_ASSOC);
     }
-
-    // You can add more methods for user-related operations as needed
-    // For example, methods to register a new user, update user details, etc.
 }
+?>

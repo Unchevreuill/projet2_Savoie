@@ -3,17 +3,19 @@ namespace projet2_Savoie\Views;
 
 class LoginView
 {
-    // Store login error message
     private $loginError;
-
-    public function setLoginError($error)
-    {
-        $this->loginError = $error;
-    }
 
     public function render()
     {
+        include_once('../../utils/DBConfig.php');
+
+        // Initialiser les variables d'erreur
+        $emailError = $passwordError = '';
+
+        // Include the logic for login
+        // include_once('../pages/logic/login_logic.php');
         ?>
+
         <!DOCTYPE html>
         <html lang="fr">
         <head>
@@ -36,13 +38,13 @@ class LoginView
                     <div class="form-group">
                         <label for="email">Adresse E-mail:</label>
                         <input type="email" id="email" name="email" class="input-field" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
-                        <span class="error"><?php echo isset($this->loginError) ? $this->loginError : ''; ?></span>
+                        <span class="error"><?php echo isset($emailError) ? $emailError : ''; ?></span>
                     </div>
 
                     <div class="form-group">
                         <label for="password">Mot de passe:</label>
                         <input type="password" id="password" name="password" class="input-field">
-                        <span class="error"><?php echo isset($this->loginError) ? $this->loginError : ''; ?></span>
+                        <span class="error"><?php echo isset($passwordError) ? $passwordError : ''; ?></span>
                     </div>
 
                     <div class="form-group">
@@ -60,6 +62,13 @@ class LoginView
             </footer>
         </body>
         </html>
-        <?php
+    <?php
+    }
+
+    public function setLoginError($error)
+    {
+        // Method to set the login error message
+        $this->loginError = $error;
     }
 }
+?>

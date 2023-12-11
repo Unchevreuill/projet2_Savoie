@@ -1,41 +1,46 @@
 <?php
 namespace projet2_Savoie\Controllers;
 
-use projet2_Savoie\Models\LoginModel;
+use projet2_Savoie\Models\UserModel;
 use projet2_Savoie\Views\LoginView;
 
 class LoginController
 {
-    private $model;
-    private $view;
+    private $userModel;
+    private $loginView;
 
-    public function __construct(LoginModel $model, LoginView $view)
+    public function __construct(UserModel $userModel, LoginView $loginView)
     {
-        $this->model = $model;
-        $this->view = $view;
+        $this->userModel = $userModel;
+        $this->loginView = $loginView;
     }
 
-    public function index()
+    public function processLogin()
     {
-        // Handle the login form submission
-        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["connexion"])) {
-            $email = $_POST["email"];
-            $password = $_POST["password"];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['connexion'])) {
+            $email = $_POST['email'];
+            $password = $_POST['password'];
 
-            // Call the model method to check login
-            $loginSuccessful = $this->model->checkLogin($email, $password);
+            // Validate email and password (add your validation logic here)
 
-            if ($loginSuccessful) {
-                // Redirect to a different page on successful login
-                header("Location: /php2/projet2_Savoie/views/pages/home.php");
+            // Retrieve user information based on email
+            $user = $this->userModel->getUserByEmail($email);
+
+            if ($user && password_verify($password, $user['pwd'])) {
+                // Authentication successful, store user information in session
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['email'] = $user['email'];
+
+                // Redirect to home page or any other desired page
+                header('Location: home.php');
                 exit();
             } else {
-                // Display login error in the view
-                $this->view->setLoginError("Invalid email or password. Please try again.");
+                // Authentication failed, set login error message
+                $this->loginView->setLoginError('Identifiants invalides. Veuillez réessayer.');
             }
         }
 
-        // Render the login view
-        $this->view->render();
+        // Render the login page
+        $this->loginView->render();
     }
 }
