@@ -27,20 +27,26 @@ class ProductModel
 
         return $query->fetch(PDO::FETCH_ASSOC);
     }
+    public function getProductsByIds(array $productIds)
+    {
+        // Utilisez les IDs pour interroger la base de données et récupérer les produits correspondants
+        $placeholders = implode(',', array_fill(0, count($productIds), '?'));
+
+        $query = $this->db->prepare("SELECT * FROM product WHERE id IN ($placeholders)");
+        $query->execute($productIds);
+
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function addToCart($productId)
     {
-        // Implémentez votre logique pour ajouter le produit au panier ici
-        // Assurez-vous d'adapter cette logique en fonction de votre structure de base de données
-        // Vous pouvez également gérer les erreurs et les succès en conséquence
-
-        // Exemple de requête pour ajouter un produit au panier
+        //requête pour ajouter un produit au panier
         $query = $this->db->prepare("INSERT INTO order_has_product (user_order_id, product_id, qtty, price) 
                                     VALUES (:orderId, :productId, :quantity, :price)");
 
-        $orderId = $this->getUserOrderId(); // À adapter en fonction de votre logique
-        $quantity = 1; // À adapter en fonction de votre logique
-        $price = $this->getProductPrice($productId); // À adapter en fonction de votre logique
+        $orderId = $this->getUserOrderId(); 
+        $quantity = 1; 
+        $price = $this->getProductPrice($productId); 
 
         $query->bindParam(':orderId', $orderId, PDO::PARAM_INT);
         $query->bindParam(':productId', $productId, PDO::PARAM_INT);
