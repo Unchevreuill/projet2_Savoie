@@ -110,6 +110,9 @@ if (isset($_SESSION['user'])) {
             <li><a href="inscription.php">Inscription</a></li>
             <li><a href="login.php">Connexion</a></li>
             <li><a href="panier.php">Panier</a></li>
+            <?php if (isset($_SESSION['user'])): ?>
+            <li><a href="deconnexion.php">Déconnexion</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
     <main>
