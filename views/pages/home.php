@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-// Inclure le fichier de configuration de la base de données
 include_once('../../utils/DBConfig.php');
+include_once('../../models/HomeModel.php');
 
 // Créer une instance de la classe DbConfig
 $dbConfig = new DbConfig();
@@ -37,12 +37,55 @@ if (!isset($_SESSION['panier']) || !is_array($_SESSION['panier'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     $productId = $_POST['product_id'];
 
-    // Ajouter le produit au panier
-    $_SESSION['panier'][] = $productId;
+    // Créez une nouvelle commande (user_order) et récupérez son ID
+    $orderDate = date('Y-m-d H:i:s'); 
+    $total = 0;
 
-    // Rafraîchir la page pour refléter les changements
-    header('Location: home.php');
-    exit();
+    // Vérifiez si l'utilisateur est connecté et obtenez son ID depuis la session
+    if (isset($_SESSION['user_id'])) {
+        $userId = $_SESSION['user_id'];
+    } else {
+        // Utilisateur non connecté, définissez l'ID par défaut à 1
+        $userId = 1;
+    }
+
+    // Créez une instance de la classe HomeModel
+    $homeModel = new \projet2_Savoie\Models\HomeModel($pdo);
+
+
+    // Insérez la commande dans la table user_order
+    $insertOrderQuery = $pdo->prepare("INSERT INTO user_order (ref, order_date, total, user_id) VALUES (:ref, :order_date, :total, :user_id)");
+    $ref = $homeModel->generateOrderReference(); // Utilisez la fonction generateOrderReference de HomeModel
+    $insertOrderQuery->bindParam(':ref', $ref);
+    $insertOrderQuery->bindParam(':order_date', $orderDate);
+    $insertOrderQuery->bindParam(':total', $total);
+    $insertOrderQuery->bindParam(':user_id', $userId);
+
+    if ($insertOrderQuery->execute()) {
+        // Récupérez l'ID de la commande nouvellement créée
+        $orderId = $pdo->lastInsertId();
+
+        // Ajoutez le produit au panier dans la table order_has_product
+        $insertProductQuery = $pdo->prepare("INSERT INTO order_has_product (user_order_id, product_id, qtty, price) VALUES (:user_order_id, :product_id, :qtty, :price)");
+        $insertProductQuery->bindParam(':user_order_id', $orderId);
+        $insertProductQuery->bindParam(':product_id', $productId);
+        $quantity = 1; // Vous pouvez ajuster la quantité en fonction de votre logique
+        $price = $homeModel->getProductPrice($productId); // Utilisez la fonction getProductPrice de HomeModel
+        $insertProductQuery->bindParam(':qtty', $quantity);
+        $insertProductQuery->bindParam(':price', $price);
+
+        if ($insertProductQuery->execute()) {
+            // Rafraîchir la page pour refléter les changements
+            header('Location: home.php');
+            exit();
+        } else {
+            // Gérer l'erreur d'insertion dans la table order_has_product
+            echo "Erreur lors de l'ajout au panier";
+        }
+    } else {
+        // Gérer l'erreur d'insertion dans la table user_order
+        echo "Erreur lors de la création de la commande";
+    }
 }
 ?>
 
@@ -53,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Accueil</title>
-    <link rel="stylesheet" href="../../css/home.css"> 
+    <link rel="stylesheet" href="../../css/home.css">
 </head>
 
 <body>
@@ -81,12 +124,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
             <h2>Nouveaux Produits</h2>
 
             <?php foreach ($latestProducts as $product): ?>
-                <div class="product"><br><br><br><br><br>
+                <div class="product">
                     <img src="../../images/<?php echo $product['url_img']; ?>" alt="<?php echo $product['name']; ?>">
                     <h3><?php echo $product['name']; ?></h3>
                     <p>Prix : $<?php echo $product['price']; ?></p>
                     <!-- Remplacez le commentaire par la description réelle -->
-                    <p>Description : <?php echo "Chandail de musique"; ?></p>
+                    <p>Description : <?php echo $product['description']; ?></p>
                     <form method="post" action="home.php">
                         <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
                         <button type="submit" name="add_to_cart">Ajouter au panier</button>
