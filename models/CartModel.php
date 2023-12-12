@@ -11,24 +11,23 @@ class CartModel
         $this->db = $db;
     }
 
-    // Obtient le contenu actuel du panier
-    public function getCartContents()
-    {
-        if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id'];
+    public function getCartContents() {
+        if (isset($_SESSION['panier']) && !empty($_SESSION['panier'])) {
+            $productIds = array_keys($_SESSION['panier']);
+            $placeholders = implode(',', array_fill(0, count($productIds), '?'));
 
-            // Sélectionnez les produits du panier pour l'utilisateur actuel
-            $query = $this->db->prepare("SELECT p.id, p.name, p.price, p.url_img, o.qtty FROM product p
-                                         INNER JOIN order_has_product o ON p.id = o.product_id
-                                         INNER JOIN user_order uo ON o.user_order_id = uo.id
-                                         WHERE uo.user_id = :userId AND uo.order_date IS NULL");
+            $query = $this->db->prepare("SELECT id, name, price, url_img FROM product WHERE id IN ($placeholders)");
+            $query->execute($productIds);
 
-            $query->bindParam(':userId', $userId, PDO::PARAM_INT);
-            $query->execute();
+            $products = $query->fetchAll(PDO::FETCH_ASSOC);
 
-            return $query->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($products as &$product) {
+                $productId = $product['id'];
+                $product['qtty'] = $_SESSION['panier'][$productId];
+            }
+
+            return $products;
         } else {
-            // Handle the case when user_id is not set in the session
             return [];
         }
     }
@@ -74,8 +73,20 @@ class CartModel
                 return $insertQuery->execute();
             }
         } else {
-            // Handle the case when user_id is not set in the session
-            return false;
+            // Utilisateur non connecté, utilisez la session pour gérer le panier
+            if (!isset($_SESSION['panier'])) {
+                $_SESSION['panier'] = [];
+            }
+
+            if (isset($_SESSION['panier'][$productId])) {
+                // Le produit existe déjà dans le panier, mettez à jour la quantité
+                $_SESSION['panier'][$productId] += $quantity;
+            } else {
+                // Le produit n'existe pas encore dans le panier, ajoutez-le
+                $_SESSION['panier'][$productId] = $quantity;
+            }
+
+            return true;
         }
     }
 
@@ -95,9 +106,14 @@ class CartModel
 
             return $query->execute();
         } else {
-            // Handle the case when user_id is not set in the session
-            return false;
+            // Utilisateur non connecté, utilisez la session pour gérer le panier
+            if (isset($_SESSION['panier'][$productId])) {
+                unset($_SESSION['panier'][$productId]);
+                return true;
+            }
         }
+
+        return false;
     }
 
     // Vide complètement le panier
@@ -114,8 +130,9 @@ class CartModel
 
             return $query->execute();
         } else {
-            // Handle the case when user_id is not set in the session
-            return false;
+            // Utilisateur non connecté, videz le panier de la session
+            $_SESSION['panier'] = [];
+            return true;
         }
     }
 }

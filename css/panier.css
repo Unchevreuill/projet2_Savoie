@@ -52,13 +52,19 @@ nav a:hover {
     background-color: #555;
 }
 
-.container {
+main {
     max-width: 1200px;
     margin: 20px auto;
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .product {
@@ -80,34 +86,7 @@ nav a:hover {
     object-fit: cover;
 }
 
-.container form {
-    margin-top: 20px;
-}
-
-.container form input[type="submit"] {
-    background-color: #007BFF;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.container form input[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-.cart {
-    display: flex;
-    align-items: center;
-}
-
-#cart-icon {
-    max-width: 30px;
-    margin-left: 10px;
-}
-
-.footer {
+footer {
     text-align: center;
     padding: 20px 0;
     background-color: #333;
