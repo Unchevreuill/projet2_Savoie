@@ -94,24 +94,27 @@ class CartModel
     {
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];
-
-            // Supprimez le produit du panier
-            $query = $this->db->prepare("DELETE FROM order_has_product
-                                         WHERE user_order_id = (SELECT id FROM user_order WHERE user_id = :userId AND order_date IS NULL)
-                                         AND product_id = :productId");
-
-            $query->bindParam(':userId', $userId, PDO::PARAM_INT);
-            $query->bindParam(':productId', $productId, PDO::PARAM_INT);
-
-            return $query->execute();
+    
+            // Construisez la requête DELETE pour supprimer le produit du panier
+            $deleteQuery = $this->db->prepare("DELETE FROM order_has_product
+                                               WHERE user_order_id = (SELECT id FROM user_order WHERE user_id = :userId AND order_date IS NULL)
+                                               AND product_id = :productId");
+    
+            $deleteQuery->bindParam(':userId', $userId, PDO::PARAM_INT);
+            $deleteQuery->bindParam(':productId', $productId, PDO::PARAM_INT);
+    
+            // Exécutez la requête DELETE pour supprimer le produit de la base de données
+            $result = $deleteQuery->execute();
+    
+            return $result;
         } else {
-            // Utilisateur non connecté, utilisez la session pour gérer le panier
+            // Utilisateur non connecté, gérer la suppression du panier en session
             if (isset($_SESSION['panier'][$productId])) {
                 unset($_SESSION['panier'][$productId]);
                 return true;
             }
         }
-
+    
         return false;
     }
 

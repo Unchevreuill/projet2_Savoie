@@ -14,13 +14,13 @@ class LoginModel
 
     public function checkLogin($email, $password)
     {
-        // Vérifiez si l'e-mail existe dans la base de données
+        // Vérifie si l'e-mail existe dans ma base de données
         $user = $this->getUserByEmail($email);
 
         if ($user) {
-            // Vérifiez le mot de passe
-            if (password_verify($password, $user['password'])) {
-                return true; // Connexion réussie
+            // Vérifie le mot de passe
+            if (password_verify($password, $user['pwd'])) {
+                return $user; // Connexion réussie, retourne les informations de l'utilisateur
             }
         }
 
@@ -29,7 +29,13 @@ class LoginModel
 
     public function getUserByEmail($email)
     {
-        $query = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+        $query = $this->db->prepare("
+            SELECT u.*, a.*, r.name as role_name 
+            FROM user u
+            LEFT JOIN address a ON u.billing_address_id = a.id
+            LEFT JOIN role r ON u.role_id = r.id
+            WHERE u.email = :email
+        ");
         $query->bindParam(':email', $email, PDO::PARAM_STR);
         $query->execute();
 
