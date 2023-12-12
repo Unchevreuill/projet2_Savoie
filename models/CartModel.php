@@ -15,17 +15,16 @@ class CartModel
         if (isset($_SESSION['panier']) && !empty($_SESSION['panier'])) {
             $productIds = array_keys($_SESSION['panier']);
             $placeholders = implode(',', array_fill(0, count($productIds), '?'));
-
-            $query = $this->db->prepare("SELECT id, name, price, url_img FROM product WHERE id IN ($placeholders)");
+    
+            // Modifiez la requête pour sélectionner les produits depuis order_has_product
+            $query = $this->db->prepare("SELECT p.id, p.name, p.price, p.url_img, ohp.qtty
+                                        FROM product AS p
+                                        JOIN order_has_product AS ohp ON p.id = ohp.product_id
+                                        WHERE ohp.product_id IN ($placeholders)");
             $query->execute($productIds);
-
+    
             $products = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            foreach ($products as &$product) {
-                $productId = $product['id'];
-                $product['qtty'] = $_SESSION['panier'][$productId];
-            }
-
+    
             return $products;
         } else {
             return [];
