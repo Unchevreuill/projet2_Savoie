@@ -1,51 +1,41 @@
 <?php
 namespace projet2_Savoie\Controllers;
 
-use projet2_Savoie\Models\ProductModel;
-use projet2_Savoie\Views\HomeView;
+use projet2_Savoie\Models\HomeModel;
 
 class HomeController
 {
     private $model;
-    private $view;
 
-    public function __construct(ProductModel $model, HomeView $view)
+    public function __construct(HomeModel $model)
     {
         $this->model = $model;
-        $this->view = $view;
     }
 
-    public function index()
+    public function getLatestProducts()
     {
-        //logique pour récupérer des produits du modèle
-        $products = $this->model->getAllProducts();
-
-        //rendu de la page d'accueil avec la liste des produits
-        $this->view->renderHome($products);
+        // Fetch the latest products from the model
+        return $this->model->getLatestProducts();
     }
 
     public function viewProductDetails($productId)
     {
-        //logique pour récupérer les détails d'un produit du modèle
-        $productDetails = $this->model->getProductDetails($productId);
-
-        // Exemple de rendu de la page des détails du produit
-        $this->view->renderProductDetails($productDetails);
+        // Get the details of a product from the model
+        return $this->model->getProductDetails($productId);
     }
 
-    public function addToCart($productId)
+    public function addToCart($userId, $productId, $quantity)
     {
-        // Exemple de logique pour ajouter un produit au panier
-        $success = $this->model->addToCart($productId);
-
-        // redirection ou d'affichage d'un message en fonction du succès
+        //add a product to the cart
+        $success = $this->model->addToCart($userId, $productId, $quantity);
+    
+        // Redirect or display a message based on success
         if ($success) {
-            header("Location: /cart");
+            header("Location: /panier.php");
             exit;
         } else {
             echo "Failed to add the product to the cart.";
         }
     }
 
-    
 }

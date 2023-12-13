@@ -1,8 +1,6 @@
 <?php
-session_start();
-
-include_once('../../utils/DBConfig.php');
-include_once('../../Models/CartModel.php');
+include_once('utils/DBConfig.php');
+include_once('models/CartModel.php');
 
 $dbConfig = new DbConfig();
 $pdo = $dbConfig->getConnection();
@@ -47,7 +45,7 @@ $cartContents = $cartModel->getCartContents();
             <div class="row">
                 <?php foreach ($cartContents as $cartItem) : ?>
                     <div class="product">
-                        <img src="../../images/<?php echo htmlspecialchars($cartItem['url_img']); ?>" alt="<?php echo htmlspecialchars($cartItem['name']); ?>">
+                        <img src="images/<?php echo htmlspecialchars($cartItem['url_img']); ?>" alt="<?php echo htmlspecialchars($cartItem['name']); ?>">
                         <p><?php echo htmlspecialchars($cartItem['name']); ?></p>
                         <p><?php echo htmlspecialchars($cartItem['price']); ?></p>
                         <p><?php echo htmlspecialchars($cartItem['qtty']); ?></p>

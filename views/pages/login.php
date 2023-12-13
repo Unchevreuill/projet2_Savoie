@@ -1,13 +1,12 @@
 <?php
-session_start();
 // Initialiser les variables d'erreur
 $emailError = $passwordError = $loginError = '';
 
 // Inclure le fichier de configuration de la base de données
-include_once('../../utils/DBConfig.php');
+include_once('utils/DBConfig.php');
 
 // Inclure le modèle de connexion
-include_once('../../models/LoginModel.php');
+include_once('models/LoginModel.php');
 
 // Créer une instance de la classe DbConfig
 $dbConfig = new DbConfig();
@@ -72,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <span class="error"><?php echo $loginError; ?></span>
         </form>
 
-        <p>Pas encore inscrit ? <a href="../pages/inscription.php">Inscrivez-vous ici</a>.</p>
+        <p>Pas encore inscrit ? <a href="pages/inscription.php">Inscrivez-vous ici</a>.</p>
     </div>
 
     <footer>

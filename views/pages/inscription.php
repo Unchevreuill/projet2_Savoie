@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 // Initialiser les variables d'erreur et les variables de champ
 $errors = [];
 $userData = [
@@ -19,10 +17,10 @@ $addressData = [
 ];
 
 // Inclure le fichier de configuration de la base de données
-include_once('../../utils/DBConfig.php');
+include_once('utils/DBConfig.php');
 
 // Inclure le modèle d'inscription
-include_once('../../models/InscriptionModel.php');
+include_once('models/InscriptionModel.php');
 
 // Créer une instance de la classe DbConfig
 $dbConfig = new DbConfig();
@@ -46,9 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $addressData['zipcode'] = $_POST['zipcode'];
     $addressData['country'] = $_POST['country'];
 
-    // Validation (à implémenter selon vos besoins)
-    // ...
-
     if (empty($errors)) {
         try {
             if ($inscriptionModel->createUser($userData, $addressData)) {
@@ -71,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - Teccart Wear</title>
-    <link rel="stylesheet" href="../../css/inscription.css">
+    <link rel="stylesheet" href="css/inscription.css">
 </head>
 <body>
     <header>

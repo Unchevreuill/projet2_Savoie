@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear</title>
-    <!-- Ajoutez des liens vers vos fichiers CSS ou d'autres ressources ici -->
-    <link rel="stylesheet" href="chemin/vers/votre/style.css">
 </head>
 <body>
     <header>

@@ -1,28 +1,37 @@
 <?php
 namespace projet2_Savoie\Views;
 
-class HomeView
-{
-    public function renderHome()
-    {
-        // Affichez ici le contenu de votre page d'accueil
-        echo '<h1>Bienvenue sur Teccart Wear</h1>';
-        echo '<p>Explorez notre collection exclusive de vêtements.</p>';
-        // Ajoutez d'autres éléments de votre page d'accueil
+// class HomeView
+// {
+//     // This method renders the home page with a list of products
+//     public function renderHome($products)
+//     {
+//         echo '<main>';
+//         echo '<div class="new-products">';
+//         echo '<h2>Nouveaux Produits</h2>';
 
-        // Exemple de lien vers la page de produits
-        echo '<a href="products.php">Voir les produits</a>';
-    }
+//         // Check if there are products to display
+//         if (!empty($products)) {
+//             foreach ($products as $product) {
+//                 echo '<div class="product">';
+//                 echo '<img src="images/' . htmlspecialchars($product['url_img']) . '" alt="' . htmlspecialchars($product['name']) . '">';
+//                 echo '<h3>' . htmlspecialchars($product['name']) . '</h3>';
+//                 echo '<p>Prix : $' . htmlspecialchars($product['price']) . '</p>';
+//                 echo '<form method="post" action="home.php">';
+//                 echo '<input type="hidden" name="product_id" value="' . htmlspecialchars($product['id']) . '">';
+//                 echo '<button type="submit" name="add_to_cart">Ajouter au panier</button>';
+//                 echo '</form>';
+//                 echo '</div>';
+//             }
+//         } else {
+//             echo '<p>Aucun produit n\'est disponible pour le moment.</p>';
+//         }
 
-    public function renderProductDetails($productDetails)
-    {
-        // Affichez ici les détails du produit
-        echo '<h2>Détails du produit</h2>';
-        echo '<p>Nom: ' . $productDetails['name'] . '</p>';
-        echo '<p>Description: ' . $productDetails['description'] . '</p>';
-        echo '<p>Prix: $' . $productDetails['price'] . '</p>';
-      
-    }
+//         echo '</div>';
+//         echo '</main>';
+//     }
 
-
-}
+//     // Additional methods for other parts of the site can be added here
+//     // For example, renderProductDetails, renderCart, etc.
+// }
+// ?>
