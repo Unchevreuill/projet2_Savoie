@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Connexion</title>
-    <link rel="stylesheet" href="../../css/login.css">
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
     <header>
@@ -47,6 +47,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h1>Teccart Wear</h1>
         </div>
     </header>
+    <nav class="dark-nav">
+    <ul>
+        <li><a href="index.php?page=home">Accueil</a></li>
+        <li><a href="index.php?page=inscription">Inscription</a></li>
+        <li><a href="index.php?page=login">Connexion</a></li>
+        <li><a href="index.php?page=panier">Panier</a></li>
+        <?php if (isset($_SESSION['user'])): ?>
+        <li><a href="index.php?page=deconnexion">Déconnexion</a></li>
+        <?php endif; ?>
+    </ul>
+</nav>
 
     <div class="container">
         <h2>Connexion</h2>

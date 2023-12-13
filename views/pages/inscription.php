@@ -74,7 +74,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h1>Inscription - Teccart Wear</h1>
         </div>
     </header>
-
+    <nav class="dark-nav">
+    <ul>
+        <li><a href="index.php?page=home">Accueil</a></li>
+        <li><a href="index.php?page=inscription">Inscription</a></li>
+        <li><a href="index.php?page=login">Connexion</a></li>
+        <li><a href="index.php?page=panier">Panier</a></li>
+        <?php if (isset($_SESSION['user'])): ?>
+        <li><a href="index.php?page=deconnexion">Déconnexion</a></li>
+        <?php endif; ?>
+    </ul>
+</nav>
     <div class="container">
         <h2>Inscrivez-vous</h2>
 

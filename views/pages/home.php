@@ -12,8 +12,18 @@ $pdo = $dbConfig->getConnection();
 $homeModel = new \projet2_Savoie\Models\HomeModel($pdo);
 $homeController = new \projet2_Savoie\Controllers\HomeController($homeModel);
 
+// Handle add-to-cart form submission
+if (isset($_POST['action']) && $_POST['action'] == 'add_to_cart' && isset($_POST['product_id'])) {
+    $userId = $_SESSION['user_id'] ?? null; 
+    if ($userId) {
+        $productId = $_POST['product_id'];
+        $quantity = 1; // Adjust based on your form or business logic
+        $homeController->addToCart($userId, $productId, $quantity);
+    }
+}
+
 // Fetch the products
-$products = $homeController->getLatestProducts()
+$products = $homeController->getLatestProducts();
 ?>
 
 <!DOCTYPE html>
@@ -29,14 +39,9 @@ $products = $homeController->getLatestProducts()
         <div class="header-content">
             <h1>Teccart Wear</h1>
             <div class="cart">
-                <a href="panier.php">
+                <a href="index.php?page=panier">
                     <img id="cart-icon" src="images/cart-icon.png" alt="Panier">
-                    <span id="cart-count">
-                        <?php
-                        // Insert cart count code here
-                        echo count($_SESSION['panier'] ?? []);
-                        ?>
-                    </span>
+                    <span id="cart-count"><?php echo count($_SESSION['panier'] ?? []); ?></span>
                 </a>
             </div>
         </div>
@@ -44,12 +49,12 @@ $products = $homeController->getLatestProducts()
 
     <nav class="dark-nav">
         <ul>
-            <li><a href="views/pages/home.php">Accueil</a></li>
-            <li><a href="views/pages/inscription.php">Inscription</a></li>
-            <li><a href="views/pages/login.php">Connexion</a></li>
-            <li><a href="views/pages/panier.php">Panier</a></li>
+            <li><a href="index.php?page=home">Accueil</a></li>
+            <li><a href="index.php?page=inscription">Inscription</a></li>
+            <li><a href="index.php?page=login">Connexion</a></li>
+            <li><a href="index.php?page=panier">Panier</a></li>
             <?php if (isset($_SESSION['user'])): ?>
-            <li><a href="views/pages/deconnexion.php">Déconnexion</a></li>
+            <li><a href="index.php?page=deconnexion">Déconnexion</a></li>
             <?php endif; ?>
         </ul>
     </nav>
@@ -65,9 +70,10 @@ $products = $homeController->getLatestProducts()
                         <img src="images/<?php echo htmlspecialchars($product['url_img']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                         <h3><?php echo htmlspecialchars($product['name']); ?></h3>
                         <p>Prix : $<?php echo htmlspecialchars($product['price']); ?></p>
-                        <form method="post" action="home.php">
+                        <form method="post" action="index.php">
                             <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
-                            <button type="submit" name="add_to_cart">Ajouter au panier</button>
+                            <input type="hidden" name="action" value="add_to_cart">
+                            <button type="submit" name="submit">Ajouter au panier</button>
                         </form>
                     </div>
                     <?php

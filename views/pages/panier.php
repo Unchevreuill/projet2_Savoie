@@ -20,20 +20,23 @@ $cartContents = $cartModel->getCartContents();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teccart Wear - Panier</title>
-    <link rel="stylesheet" href="../../css/panier.css">
+    <link rel="stylesheet" href="css/panier.css">
 </head>
 <body>
     <header>
         <div class="header-content">
             <h1>Teccart Wear</h1>
-            <nav>
-                <ul>
-                    <li><a href="home.php">Accueil</a></li>
-                    <li><a href="login.php">connexion</a></li>
-                    <li><a href="inscription.php">inscription</a></li>
-                    <li><a href="panier.php">Panier</a></li>
-                </ul>
-            </nav>
+            <nav class="dark-nav">
+    <ul>
+        <li><a href="index.php?page=home">Accueil</a></li>
+        <li><a href="index.php?page=inscription">Inscription</a></li>
+        <li><a href="index.php?page=login">Connexion</a></li>
+        <li><a href="index.php?page=panier">Panier</a></li>
+        <?php if (isset($_SESSION['user'])): ?>
+        <li><a href="index.php?page=deconnexion">Déconnexion</a></li>
+        <?php endif; ?>
+    </ul>
+</nav>
         </div>
     </header>
 
