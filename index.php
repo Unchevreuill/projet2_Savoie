@@ -52,13 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'country' => $_POST['country'] ?? ''
         ];
         $inscriptionController->createUser($userData, $addressData);
-        // Redirection après l'inscription (décommentez après le débogage)
-         header('Location: index.php?page=login');
+         header('Location: index.php?page=home');
          exit();
     }
-    var_dump($_GET); // Check GET data
-    var_dump($_POST); // Check POST data
-    // die(); // Uncomment to stop execution here
 }
 
 // Routage de page

@@ -20,10 +20,10 @@ class InscriptionModel
         $this->db->beginTransaction();
     
         try {
-            // Insérer l'adresse et obtenir l'ID
+            // Insére l'adresse et obtenir l'ID
             $addressId = $this->createAddress($addressData);
     
-            // Générer un token ou utiliser une valeur par défaut
+            // Génére un token
             $token = bin2hex(random_bytes(16)); // Exemple de génération d'un token aléatoire
     
             // Définir l'ID du rôle 'client' à 3
@@ -48,17 +48,22 @@ class InscriptionModel
     
             $stmt->execute();
     
+            // Récupérer l'ID de l'utilisateur nouvellement créé
+            $userId = $this->db->lastInsertId();
+    
             // Valider la transaction
             $this->db->commit();
     
-            return true;
+            // Retourner l'ID de l'utilisateur
+            return $userId;
         } catch (PDOException $e) {
             // Annuler la transaction en cas d'erreur
-            
+            $this->db->rollBack();
+            error_log("Erreur lors de la création de l'utilisateur: " . $e->getMessage());
             throw $e;
-            die();
         }
     }
+    
     
     
 

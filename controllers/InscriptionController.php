@@ -18,12 +18,13 @@ class InscriptionController
     {
         if ($this->validateUserData($userData) && $this->validateAddressData($addressData)) {
             try {
-                $result = $this->model->createUser($userData, $addressData);
+                $userId = $this->model->createUser($userData, $addressData);
 
-                if ($result) {
-                    // Démarrer la session et stocker les informations de l'utilisateur
+                if ($userId) {
+                    // Démarre la session et stock les informations de l'utilisateur, y compris l'ID
                     session_start();
                     $_SESSION['user'] = [
+                        'id' => $userId,
                         'fname' => $userData['fname'], 
                         'lname' => $userData['lname']
                     ];
@@ -42,7 +43,7 @@ class InscriptionController
     }
     private function validateUserData($userData)
     {
-        // Vérifiez que les champs essentiels ne sont pas vides
+        // Vérifie que les champs essentiels ne sont pas vides
         if (empty($userData['email']) || empty($userData['password']) || 
             empty($userData['fname']) || empty($userData['lname'])) {
             return false;
@@ -51,17 +52,15 @@ class InscriptionController
             return false;
         }
     
-        // Vérifiez que l'email est valide
+        // Vérifie que l'email est valide
         if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
             return false;
         }
     
-        // Vérifiez la longueur du mot de passe (par exemple, au moins 6 caractères)
+        // Vérifie la longueur du mot de passe (au moins 6 caractères)
         if (strlen($userData['password']) < 6) {
             return false;
         }
-    
-        // Ajoutez ici d'autres validations selon vos besoins
     
         return true;
     }

@@ -65,6 +65,10 @@ $products = $homeController->getLatestProducts();
             <?php if (isset($_SESSION['user'])): ?>
             <li><a href="index.php?page=deconnexion">Déconnexion</a></li>
             <?php endif; ?>
+            <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] == 1): ?>
+            <li><a href="gestion.php">Gestion</a></li>
+            <?php endif; ?>
+
         </ul>
     </nav>
 <?php echo $welcomeMessage; ?>
