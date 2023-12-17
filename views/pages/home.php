@@ -63,6 +63,7 @@ $products = $homeController->getLatestProducts();
             <li><a href="index.php?page=login">Connexion</a></li>
             <li><a href="index.php?page=panier">Panier</a></li>
             <?php if (isset($_SESSION['user'])): ?>
+            <li><a href="profil.php">Mon Profil</a></li>
             <li><a href="index.php?page=deconnexion">Déconnexion</a></li>
             <?php endif; ?>
             <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] == 1): ?>
