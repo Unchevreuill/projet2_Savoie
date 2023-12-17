@@ -1,11 +1,13 @@
 <?php
-namespace projet2_Savoie\Models;
+
+namespace projet2_Savoie\models;
 
 use PDO;
 use PDOException;
 
 class InscriptionModel
 {
+
     private $db;
 
     public function __construct(PDO $db)
@@ -13,49 +15,55 @@ class InscriptionModel
         $this->db = $db;
     }
 
-    public function createUser($userData, $addressData)
-    {
+    public function createUser($userData, $addressData) {
         // Commencer une transaction
         $this->db->beginTransaction();
-
+    
         try {
-            // Insérer l'adresse
+            // Insérer l'adresse et obtenir l'ID
             $addressId = $this->createAddress($addressData);
-
-            // Définir l'ID du rôle 'client'
-            $roleId = $this->getRoleId('client');
-
+    
+            // Générer un token ou utiliser une valeur par défaut
+            $token = bin2hex(random_bytes(16)); // Exemple de génération d'un token aléatoire
+    
+            // Définir l'ID du rôle 'client' à 3
+            $roleId = 3;
+    
             // Préparer la requête pour insérer l'utilisateur
-            $stmt = $this->db->prepare("INSERT INTO user (email, pwd, fname, lname, billing_address_id, shipping_address_id, role_id) VALUES (:email, :pwd, :fname, :lname, :billing_address_id, :shipping_address_id, :role_id)");
+            $stmt = $this->db->prepare("INSERT INTO user (email, token, username, fname, lname, pwd, billing_address_id, shipping_address_id, role_id) VALUES (:email, :token, :username, :fname, :lname, :pwd, :billing_address_id, :shipping_address_id, :role_id)");
             
             // Hasher le mot de passe
             $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
-
-            // Lier les paramètres
+    
+            // Lier les paramètres et exécuter la requête
             $stmt->bindParam(':email', $userData['email']);
-            $stmt->bindParam(':pwd', $hashedPassword);
+            $stmt->bindParam(':token', $token);
+            $stmt->bindParam(':username', $userData['username']);
             $stmt->bindParam(':fname', $userData['fname']);
             $stmt->bindParam(':lname', $userData['lname']);
+            $stmt->bindParam(':pwd', $hashedPassword);
             $stmt->bindParam(':billing_address_id', $addressId);
-            $stmt->bindParam(':shipping_address_id', $addressId); // Supposons que l'adresse de livraison est la même que l'adresse de facturation
+            $stmt->bindParam(':shipping_address_id', $addressId);
             $stmt->bindParam(':role_id', $roleId);
-
-            // Exécuter la requête
+    
             $stmt->execute();
-
+    
             // Valider la transaction
             $this->db->commit();
-
+    
             return true;
         } catch (PDOException $e) {
             // Annuler la transaction en cas d'erreur
-            $this->db->rollBack();
+            
             throw $e;
+            die();
         }
     }
+    
+    
 
-    private function createAddress($addressData)
-    {
+    private function createAddress($addressData){
+        try {
         $stmt = $this->db->prepare("INSERT INTO address (street_name, street_nb, city, province, zipcode, country) VALUES (:street_name, :street_nb, :city, :province, :zipcode, :country)");
 
         $stmt->bindParam(':street_name', $addressData['street_name']);
@@ -67,15 +75,10 @@ class InscriptionModel
 
         $stmt->execute();
         return $this->db->lastInsertId();
-    }
-
-    private function getRoleId($roleName)
-    {
-        $stmt = $this->db->prepare("SELECT id FROM role WHERE name = :name");
-        $stmt->bindParam(':name', $roleName);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? $result['id'] : null;
-    }
+    }catch (PDOException $e) {
+        // Gérer l'erreur ou la logger
+        error_log("Erreur lors de la création de l'adresse: " . $e->getMessage());
+        throw $e;
+    } }
 }
 ?>

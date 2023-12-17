@@ -5,7 +5,8 @@ $userData = [
     'email' => '',
     'password' => '',
     'fname' => '',
-    'lname' => ''
+    'lname' => '',
+    // 'username' => '', // Décommentez si vous utilisez 'username'
 ];
 $addressData = [
     'street_name' => '',
@@ -16,19 +17,6 @@ $addressData = [
     'country' => ''
 ];
 
-// Inclure le fichier de configuration de la base de données
-include_once('utils/DBConfig.php');
-
-// Inclure le modèle d'inscription
-include_once('models/InscriptionModel.php');
-
-// Créer une instance de la classe DbConfig
-$dbConfig = new DbConfig();
-$pdo = $dbConfig->getConnection();
-
-// Créer une instance du modèle d'inscription
-$inscriptionModel = new \projet2_Savoie\Models\InscriptionModel($pdo);
-
 // Traiter la soumission du formulaire d'inscription
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collecter les données du formulaire
@@ -36,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userData['password'] = $_POST['password'];
     $userData['fname'] = $_POST['fname'];
     $userData['lname'] = $_POST['lname'];
+    $userData['username'] = $_POST['username'];
     
     $addressData['street_name'] = $_POST['street_name'];
     $addressData['street_nb'] = $_POST['street_nb'];
@@ -44,21 +33,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $addressData['zipcode'] = $_POST['zipcode'];
     $addressData['country'] = $_POST['country'];
 
+    // Affichage des données du formulaire pour le débogage
+    echo '<pre>';
+    var_dump($userData);
+    var_dump($addressData);
+    echo '</pre>';
+    // die(); 
+
     if (empty($errors)) {
         try {
+            // Tentative de création de l'utilisateur
+            // Assurez-vous que $inscriptionModel est correctement initialisé et passé à cette page
             if ($inscriptionModel->createUser($userData, $addressData)) {
+                echo '<p>Inscription réussie</p>';
+
                 // Stocker les informations de l'utilisateur dans la session
                 $_SESSION['user'] = $userData;
-                // Redirection vers home.php
-                header('Location: home.php');
-                exit();
+
+                // Redirection vers home.php (Commentée pour le débogage)
+                // header('Location: home.php');
+                // exit();
+            } else {
+                echo '<p>Échec de l\'inscription</p>';
             }
         } catch (Exception $e) {
             $errors[] = "Erreur lors de l'inscription: " . $e->getMessage();
         }
     }
-}
+    }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -106,6 +111,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <div class="form-group">
+                <label for="username">Nom d'utilisateur:</label>
+                <input type="text" id="username" name="username" class="input-field" required>
+            </div>
+
+            <div class="form-group">
                 <label for="fname">Prénom:</label>
                 <input type="text" id="fname" name="fname" class="input-field" required>
             </div>
@@ -150,6 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="submit" name="inscription" value="S'inscrire" class="inscription-button">
             </div>
         </form>
+        
 
         <p>Déjà inscrit ? <a href="login.php">Connectez-vous ici</a>.</p>
     </div>

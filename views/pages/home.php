@@ -9,8 +9,8 @@ $dbConfig = DbConfig::getInstance();
 $pdo = $dbConfig->getConnection();
 
 // Create instances of the Model and Controller
-$homeModel = new \projet2_Savoie\Models\HomeModel($pdo);
-$homeController = new \projet2_Savoie\Controllers\HomeController($homeModel);
+$homeModel = new \projet2_Savoie\models\HomeModel($pdo);
+$homeController = new \projet2_Savoie\controllers\HomeController($homeModel);
 
 // Handle add-to-cart form submission
 if (isset($_POST['action']) && $_POST['action'] == 'add_to_cart' && isset($_POST['product_id'])) {
@@ -21,7 +21,16 @@ if (isset($_POST['action']) && $_POST['action'] == 'add_to_cart' && isset($_POST
         $homeController->addToCart($userId, $productId, $quantity);
     }
 }
+// Vérifier si les informations de l'utilisateur sont stockées dans la session
+if (isset($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+    $welcomeMessage = "Bonjour " . htmlspecialchars($user['fname']) . " " . htmlspecialchars($user['lname']);
+} else {
+    $welcomeMessage = "Bienvenue, visiteur!";
+}
 
+// Afficher le message de bienvenue
+echo $welcomeMessage;
 // Fetch the products
 $products = $homeController->getLatestProducts();
 ?>
@@ -58,7 +67,7 @@ $products = $homeController->getLatestProducts();
             <?php endif; ?>
         </ul>
     </nav>
-
+<?php echo $welcomeMessage; ?>
     <main>
         <div class="new-products">
             <h2>Nouveaux Produits</h2>

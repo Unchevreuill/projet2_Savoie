@@ -1,7 +1,6 @@
 <?php
 include_once('utils/DBConfig.php');
 include_once('models/CartModel.php');
-
 $dbConfig = new DbConfig();
 $pdo = $dbConfig->getConnection();
 

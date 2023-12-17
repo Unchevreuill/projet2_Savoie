@@ -1,40 +1,67 @@
 <?php
-// Include the file for class autoloading
+// Inclusion du fichier pour l'autoload des classes
 include_once 'autoload.php';
 
-// Include the database configuration file
+// Inclusion du fichier de configuration de la base de données
 include_once 'utils/DBConfig.php';
 
-// Start the session
+// Démarrage de la session
 session_start();
 
-// Create a PDO instance for database connection
+// Création d'une instance PDO pour la connexion à la base de données
 $dbConfig = DbConfig::getInstance();
 $pdo = $dbConfig->getConnection();
 
-// Determine which page to load based on the 'page' parameter
-$page = $_GET['page'] ?? 'home'; // Default to 'home' if no parameter is set
+// Détermination de la page à charger
+$page = $_GET['page'] ?? 'home';
 
-// Include necessary files for the requested page
-include_once('models/HomeModel.php');
-include_once('controllers/HomeController.php');
-$homeModel = new \projet2_Savoie\Models\HomeModel($pdo);
-$homeController = new \projet2_Savoie\Controllers\HomeController($homeModel);
+// Chargement conditionnel des modèles et contrôleurs
+switch ($page) {
+    case 'home':
+        include_once('models/HomeModel.php');
+        include_once('controllers/HomeController.php');
+        $homeModel = new \projet2_Savoie\Models\HomeModel($pdo);
+        $homeController = new \projet2_Savoie\Controllers\HomeController($homeModel);
+        break;
+    case 'inscription':
+        include_once('models/InscriptionModel.php');
+        include_once('controllers/InscriptionController.php');
+        $inscriptionModel = new \projet2_Savoie\Models\InscriptionModel($pdo);
+        $inscriptionController = new \projet2_Savoie\Controllers\InscriptionController($inscriptionModel);
+        break;
 
-// Handle add-to-cart form submission and other actions
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['action']) && $_POST['action'] == 'add_to_cart' && isset($_POST['product_id'])) {
-        $userId = $_SESSION['user_id'] ?? null; 
-        if ($userId) {
-            $productId = $_POST['product_id'];
-            $quantity = 1; // Adjust based on your form or business logic
-            $homeController->addToCart($userId, $productId, $quantity);
-        }
-    }
-    // Additional POST actions can be handled here
 }
 
-// Page routing
+// Gestion de la soumission des formulaires et d'autres actions
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Traitement de la soumission du formulaire d'inscription
+    if (isset($_POST['action']) && $_POST['action'] == 'register' && $page == 'inscription') {
+        $userData = [
+            'email' => $_POST['email'] ?? '',
+            'password' => $_POST['password'] ?? '',
+            'fname' => $_POST['fname'] ?? '',
+            'lname' => $_POST['lname'] ?? '',
+            'username' => $_POST['username'] ?? '', 
+        ];
+        $addressData = [
+            'street_name' => $_POST['street_name'] ?? '',
+            'street_nb' => $_POST['street_nb'] ?? '',
+            'city' => $_POST['city'] ?? '',
+            'province' => $_POST['province'] ?? '',
+            'zipcode' => $_POST['zipcode'] ?? '',
+            'country' => $_POST['country'] ?? ''
+        ];
+        $inscriptionController->createUser($userData, $addressData);
+        // Redirection après l'inscription (décommentez après le débogage)
+         header('Location: index.php?page=login');
+         exit();
+    }
+    var_dump($_GET); // Check GET data
+    var_dump($_POST); // Check POST data
+    // die(); // Uncomment to stop execution here
+}
+
+// Routage de page
 switch ($page) {
     case 'home':
         include 'views/pages/home.php';
@@ -49,12 +76,10 @@ switch ($page) {
         include 'views/pages/panier.php';
         break;
     case 'deconnexion':
-        // Handle deconnexion logic and redirect
-        include 'views/pages/deconnexion.php';
-        header('Location: index.php?page=home');
+        session_destroy(); // Gestion de la déconnexion
+        header('Location: index.php?page=home'); // Redirection vers la page d'accueil
         exit();
-    
-    
+   
 }
 
-?>
+

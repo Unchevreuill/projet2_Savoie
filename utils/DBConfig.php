@@ -18,6 +18,7 @@ class DbConfig
         try {
             $this->pdo = new PDO($dsn, self::USERNAME, self::PASSWORD);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            var_dump($this->pdo);
         } catch (PDOException $e) {
             throw new Exception("Erreur de connexion à la base de données : " . $e->getMessage());
         }

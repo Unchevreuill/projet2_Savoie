@@ -8,7 +8,7 @@ use PDORow;
 
 class HomeModel
 {
-    private $db;
+    public $db;
 
     public function __construct(PDO $db)
     {
